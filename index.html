@@ -312,7 +312,7 @@ function recalcularNaoEditadas(){
 
     }
 
-    /* OFF = divide principal igualmente com precisão de centavos */
+    /* OFF = divide principal normal */
 
     if(!modoTotalEl || modoTotalEl.value === 'off'){
 
@@ -320,81 +320,109 @@ function recalcularNaoEditadas(){
 
         if(sobra < 0) sobra = 0;
 
-        let centavos = Math.round(sobra * 100);
+        let cent = Math.round(sobra * 100);
 
-        let base = Math.floor(centavos / livres.length);
+        let base = Math.floor(cent / livres.length);
 
-        let resto = centavos % livres.length;
+        let resto = cent % livres.length;
 
         livres.forEach((idx,pos)=>{
 
-            let valorCent = base + (pos < resto ? 1 : 0);
-
-            pagamentos[idx] = +(valorCent / 100).toFixed(2);
+            pagamentos[idx] = (base + (pos < resto ? 1 : 0)) / 100;
 
         });
+
+        criarParcelaSeFaltar();
+
+        return;
 
     }
 
-    /* ON = divide TOTAL final quase igual entre parcelas */
+    /* ON = parcelas totais iguais */
 
-    else{
+    let saldoInicial = +(total - usado).toFixed(2);
 
-        let saldo = +(total - usado).toFixed(2);
+    if(saldoInicial < 0) saldoInicial = 0;
 
-        if(saldo < 0) saldo = 0;
+    let n = livres.length;
 
-        let totalFinal = 0;
+    /* busca valor ideal da parcela total */
 
-        let saldoTemp = saldo;
+    let baixo = 0;
 
-        for(let i=0;i<livres.length;i++){
+    let alto = saldoInicial * 2;
 
-            let principalMedio = saldo / livres.length;
+    for(let t=0;t<60;t++){
 
-            let j = juros(saldoTemp);
+        let meio = (baixo + alto) / 2;
 
-            totalFinal += principalMedio + j;
+        let saldo = saldoInicial;
 
-            saldoTemp -= principalMedio;
+        for(let i=0;i<n;i++){
+
+            let j = juros(saldo);
+
+            let principal = meio - j;
+
+            if(principal < 0) principal = 0;
+
+            if(principal > saldo) principal = saldo;
+
+            saldo -= principal;
 
         }
 
-        let totalCent = Math.round(totalFinal * 100);
+        if(saldo > 0){
 
-        let baseCent = Math.floor(totalCent / livres.length);
+            baixo = meio;
 
-        let restoCent = totalCent % livres.length;
+        }else{
 
-        saldoTemp = saldo;
+            alto = meio;
 
-        livres.forEach((idx,pos)=>{
+        }
 
-            let parcelaTotalCent = baseCent + (pos < restoCent ? 1 : 0);
+    }
 
-            let parcelaTotal = parcelaTotalCent / 100;
+    let parcelaIdeal = alto;
 
-            let j = juros(saldoTemp);
+    /* aplica resultado */
 
-            let pago = +(parcelaTotal - j).toFixed(2);
+    let saldo = saldoInicial;
 
-            if(pago < 0) pago = 0;
+    livres.forEach(idx=>{
 
-            if(pago > saldoTemp) pago = saldoTemp;
+        let j = juros(saldo);
 
-            pagamentos[idx] = pago;
+        let principal = +(parcelaIdeal - j).toFixed(2);
 
-            saldoTemp -= pago;
+        if(principal < 0) principal = 0;
 
-        });
+        if(principal > saldo) principal = saldo;
 
-        let dif = +(total - soma()).toFixed(2);
+        pagamentos[idx] = principal;
 
-        if(Math.abs(dif) > 0){
+        saldo = +(saldo - principal).toFixed(2);
 
-            pagamentos[livres[livres.length-1]] =
+    });
 
-                +(pagamentos[livres[livres.length-1]] + dif).toFixed(2);
+    /* corrige centavos residuais espalhando, não jogando tudo no último */
+
+    if(Math.abs(saldo) > 0){
+
+        for(let i=livres.length-1;i>=0 && Math.abs(saldo)>0;i--){
+
+            let idx = livres[i];
+
+            let add = Math.min(Math.abs(saldo),0.01);
+
+            if(saldo > 0){
+
+                pagamentos[idx] = +(pagamentos[idx] + add).toFixed(2);
+
+                saldo = +(saldo - add).toFixed(2);
+
+            }
 
         }
 
