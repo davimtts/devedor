@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Simulador</title>
+    <style>
+        body {
+            margin: 0;
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            padding: 20px
+        }
+
+        h1 {
+            font-size: 22px
+        }
+
+        .wrap {
+            max-width: 980px;
+            margin: auto
+        }
+
+        .top {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px
+        }
+
+        .card {
+            background: #111;
+            padding: 12px;
+            border-radius: 12px
+        }
+
+        .card label {
+            display: block;
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 6px
+        }
+
+        .card input,
+        .card select {
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            width: 120px
+        }
+
+        .card select {
+            width: 70px
+        }
+
+        .money {
+            color: #00ff9d
+        }
+
+        .remain {
+            color: #ff9d00
+        }
+
+        .juros {
+            color: #b26cff
+        }
+
+        .total {
+            color: #4cff7a
+        }
+
+        .warn {
+            color: #777;
+            font-size: 12px
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 1fr 1fr;
+            gap: 8px;
+            align-items: center
+        }
+
+        .row {
+            padding: 8px 0;
+            border-bottom: 1px solid #1c1c1c
+        }
+
+        .row input {
+
+            background: #000;
+            border: none;
+            color: #00ff9d;
+            padding: 8px;
+            border-radius: 8px
+        }
+
+        .head {
+            font-size: 12px;
+            color: #888
+        }
+
+        .sum {
+            margin-top: 16px;
+            font-size: 18px;
+            color: #b26cff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>Simulador de Parcelas Irregulares</h1>
+
+        <div class="top">
+            <div class="card">
+                <label>Total dívida</label>
+                <input id="total" type="number" value="1800" step="0.01">
+            </div>
+
+            <div class="card">
+                <label>Juros %</label>
+                <input id="taxa" type="number" value="2.43" step="0.01">
+            </div>
+
+            <div class="card">
+                <label>Parcelas</label>
+                <select id="parcelas"></select>
+            </div>
+
+            <div class="card">
+                <label>Total automático</label>
+                <select id="modoTotal" style="width:80px">
+                    <option value="off">OFF</option>
+                    <option value="on">ON</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="table"></div>
+
+        <div class="sum">
+            Juros total:
+            <span class="juros" id="jurosTotal">0,00</span>
+        </div>
+    </div>
+</body>
+
+<script>
+    const totalEl = document.getElementById('total');
+    const taxaEl = document.getElementById('taxa');
+    const parcelasEl = document.getElementById('parcelas');
+    const table = document.getElementById('table');
+    const jurosTotal = document.getElementById('jurosTotal');
+    const modoTotalEl = document.getElementById('modoTotal');
+
+    let parcelas = 5;
+    let pagamentos = [];
+    let editadas = new Set();
+
+    let timer = null;
+    let tempoEspera = 4000;
+
+    function br(v) {
+        return Number(v).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function fillSelect(max = 36) {
+        parcelasEl.innerHTML = '';
+        for (let i = 1; i <= max; i++) {
+            const o = document.createElement('option');
+            o.value = i;
+            o.textContent = i;
+            if (i === parcelas) o.selected = true;
+            parcelasEl.appendChild(o);
+        }
+    }
+
+    function soma() {
+        return pagamentos.reduce((a, b) => a + b, 0);
+    }
+
+    function juros(v) {
+        return +(v * (+taxaEl.value / 100)).toFixed(2);
+    }
+
+    function criarParcelaSeFaltar() {
+        let falta = +(+totalEl.value - soma()).toFixed(2);
+
+        if (falta > 0.009) {
+            pagamentos.push(falta);
+            parcelas = pagamentos.length;
+            fillSelect();
+        }
+    }
+
+    function recalcularNaoEditadas() {
+
+        const total = +totalEl.value;
+
+        let usado = 0;
+        let livres = [];
+
+        for (let i = 0; i < pagamentos.length; i++) {
+            if (editadas.has(i)) {
+                usado += pagamentos[i];
+            } else {
+                livres.push(i);
+            }
+        }
+
+        if (!livres.length) {
+            criarParcelaSeFaltar();
+            return;
+        }
+
+        /* modo normal divide só principal */
+        if (!modoTotalEl || modoTotalEl.value === 'off') {
+
+            let sobra = +(total - usado).toFixed(2);
+            if (sobra < 0) sobra = 0;
+
+            let base = +(sobra / livres.length).toFixed(2);
+
+            livres.forEach(i => {
+                pagamentos[i] = base;
+            });
+
+            let dif = +(total - soma()).toFixed(2);
+            pagamentos[livres[livres.length - 1]] += dif;
+        }
+
+        /* modo ON divide total final com juros */
+        else {
+
+            let saldo = +(total - usado).toFixed(2);
+            if (saldo < 0) saldo = 0;
+
+            let alvoTotal = 0;
+            let saldoTemp = saldo;
+
+            for (let i = 0; i < livres.length; i++) {
+                let j = juros(saldoTemp);
+                let principalMedio = saldo / livres.length;
+                alvoTotal += principalMedio + j;
+                saldoTemp -= principalMedio;
+            }
+
+            let parcelaTotal = +(alvoTotal / livres.length).toFixed(2);
+
+            saldoTemp = saldo;
+
+            livres.forEach(idx => {
+
+                let j = juros(saldoTemp);
+                let pago = +(parcelaTotal - j).toFixed(2);
+
+                if (pago < 0) pago = 0;
+                if (pago > saldoTemp) pago = saldoTemp;
+
+                pagamentos[idx] = pago;
+                saldoTemp -= pago;
+            });
+
+            let dif = +(total - soma()).toFixed(2);
+            pagamentos[livres[livres.length - 1]] += dif;
+        }
+
+        criarParcelaSeFaltar();
+    }
+
+    function initPag() {
+
+        pagamentos = [];
+        editadas.clear();
+
+        let total = +totalEl.value;
+        let base = +(total / parcelas).toFixed(2);
+
+        for (let i = 0; i < parcelas; i++) {
+            pagamentos.push(base);
+        }
+
+        let dif = +(total - soma()).toFixed(2);
+        pagamentos[pagamentos.length - 1] += dif;
+
+        render();
+    }
+
+    function mudarParcelas(novoTotal) {
+
+        const atual = pagamentos.length;
+
+        if (novoTotal > atual) {
+
+            while (pagamentos.length < novoTotal) {
+                pagamentos.push(0);
+            }
+
+        } else if (novoTotal < atual) {
+
+            pagamentos = pagamentos.slice(0, novoTotal);
+
+            let novoSet = new Set();
+
+            [...editadas].forEach(i => {
+                if (i < novoTotal) novoSet.add(i);
+            });
+
+            editadas = novoSet;
+        }
+
+        parcelas = novoTotal;
+        fillSelect();
+
+        recalcularNaoEditadas();
+        render();
+    }
+
+    function iniciarBarra(input) {
+
+        input.style.backgroundImage =
+            'linear-gradient(to right,#b26cff 100%,transparent 100%)';
+
+        input.style.backgroundSize = '100% 2px';
+        input.style.backgroundRepeat = 'no-repeat';
+        input.style.backgroundPosition = 'bottom left';
+        input.style.transition = 'none';
+
+        requestAnimationFrame(() => {
+            input.style.transition =
+                `background-size ${tempoEspera}ms linear`;
+
+            input.style.backgroundSize = '0% 2px';
+        });
+    }
+
+    function limparBarra() {
+
+        document.querySelectorAll('[data-pago],[data-total]').forEach(inp => {
+            inp.style.backgroundImage = '';
+            inp.style.backgroundSize = '';
+            inp.style.transition = '';
+        });
+    }
+
+    function agendarAtualizacao(callback, input) {
+
+        clearTimeout(timer);
+        limparBarra();
+        iniciarBarra(input);
+
+        timer = setTimeout(() => {
+            limparBarra();
+            callback();
+            render();
+        }, tempoEspera);
+    }
+
+    function onPago(idx, val, input) {
+
+        pagamentos[idx] = Math.max(0, parseFloat(val) || 0);
+        editadas.add(idx);
+
+        agendarAtualizacao(() => {
+            recalcularNaoEditadas();
+        }, input);
+    }
+
+    function onTotal(idx, val, input) {
+
+        let falta = +totalEl.value;
+
+        for (let i = 0; i < idx; i++) {
+            falta -= pagamentos[i];
+        }
+
+        let j = juros(falta);
+
+        pagamentos[idx] = Math.max(
+            0,
+            +(((parseFloat(val) || 0) - j).toFixed(2))
+        );
+
+        editadas.add(idx);
+
+        agendarAtualizacao(() => {
+            recalcularNaoEditadas();
+        }, input);
+    }
+
+    function render() {
+
+        table.innerHTML = '';
+
+        const head = document.createElement('div');
+        head.className = 'grid head row';
+        head.style.gridTemplateColumns = '40px 1fr 1fr 1fr 1fr';
+
+        head.innerHTML = `
+        <div>#</div>
+        <div>Paga</div>
+        <div>Falta</div>
+        <div>Juros</div>
+        <div>Total</div>
+    `;
+
+        table.appendChild(head);
+
+        let falta = +totalEl.value;
+        let somaJ = 0;
+
+        pagamentos.forEach((p, i) => {
+
+            let j = juros(falta);
+            let totalLinha = +(p + j).toFixed(2);
+
+            somaJ += j;
+
+            const row = document.createElement('div');
+            row.className = 'grid row';
+            row.style.gridTemplateColumns = '40px 1fr 1fr 1fr 1fr';
+
+            row.innerHTML = `
+            <div>${i + 1}</div>
+
+            <div>
+                <input data-pago="${i}" value="${p.toFixed(2)}">
+            </div>
+
+            <div class="remain">${br(falta)}</div>
+
+            <div class="juros">${br(j)}</div>
+
+            <div>
+                <input data-total="${i}" value="${totalLinha.toFixed(2)}">
+            </div>
+        `;
+
+            table.appendChild(row);
+
+            falta = +(falta - p).toFixed(2);
+        });
+
+        jurosTotal.textContent = br(somaJ);
+
+        document.querySelectorAll('[data-pago]').forEach(el => {
+            el.oninput = e => {
+                onPago(+e.target.dataset.pago, e.target.value, e.target);
+            };
+        });
+
+        document.querySelectorAll('[data-total]').forEach(el => {
+            el.oninput = e => {
+                onTotal(+e.target.dataset.total, e.target.value, e.target);
+            };
+        });
+    }
+
+    parcelasEl.onchange = e => {
+        mudarParcelas(+e.target.value);
+    };
+
+    totalEl.oninput = initPag;
+    taxaEl.oninput = () => {
+        recalcularNaoEditadas();
+        render();
+    };
+
+    if (modoTotalEl) {
+        modoTotalEl.onchange = () => {
+            recalcularNaoEditadas();
+            render();
+        };
+    }
+
+    fillSelect();
+    initPag();
+</script>
+
+</html>
