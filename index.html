@@ -287,71 +287,121 @@ function recalcularNaoEditadas(){
     const total = +totalEl.value;
 
     let usado = 0;
+
     let livres = [];
 
     for(let i=0;i<pagamentos.length;i++){
+
         if(editadas.has(i)){
+
             usado += pagamentos[i];
+
         }else{
+
             livres.push(i);
+
         }
+
     }
 
     if(!livres.length){
+
         criarParcelaSeFaltar();
+
         return;
+
     }
+
+    /* OFF = divide principal igualmente com precisão de centavos */
 
     if(!modoTotalEl || modoTotalEl.value === 'off'){
 
         let sobra = +(total - usado).toFixed(2);
+
         if(sobra < 0) sobra = 0;
 
-        let base = +(sobra / livres.length).toFixed(2);
+        let centavos = Math.round(sobra * 100);
 
-        livres.forEach(i=>{
-            pagamentos[i] = base;
+        let base = Math.floor(centavos / livres.length);
+
+        let resto = centavos % livres.length;
+
+        livres.forEach((idx,pos)=>{
+
+            let valorCent = base + (pos < resto ? 1 : 0);
+
+            pagamentos[idx] = +(valorCent / 100).toFixed(2);
+
         });
 
-        let dif = +(total - soma()).toFixed(2);
-        pagamentos[livres[livres.length - 1]] += dif;
+    }
 
-    }else{
+    /* ON = divide TOTAL final quase igual entre parcelas */
+
+    else{
 
         let saldo = +(total - usado).toFixed(2);
+
         if(saldo < 0) saldo = 0;
 
-        let alvoTotal = 0;
+        let totalFinal = 0;
+
         let saldoTemp = saldo;
 
         for(let i=0;i<livres.length;i++){
-            let j = juros(saldoTemp);
+
             let principalMedio = saldo / livres.length;
-            alvoTotal += principalMedio + j;
+
+            let j = juros(saldoTemp);
+
+            totalFinal += principalMedio + j;
+
             saldoTemp -= principalMedio;
+
         }
 
-        let parcelaTotal = +(alvoTotal / livres.length).toFixed(2);
+        let totalCent = Math.round(totalFinal * 100);
+
+        let baseCent = Math.floor(totalCent / livres.length);
+
+        let restoCent = totalCent % livres.length;
 
         saldoTemp = saldo;
 
-        livres.forEach(idx=>{
+        livres.forEach((idx,pos)=>{
+
+            let parcelaTotalCent = baseCent + (pos < restoCent ? 1 : 0);
+
+            let parcelaTotal = parcelaTotalCent / 100;
 
             let j = juros(saldoTemp);
+
             let pago = +(parcelaTotal - j).toFixed(2);
 
             if(pago < 0) pago = 0;
+
             if(pago > saldoTemp) pago = saldoTemp;
 
             pagamentos[idx] = pago;
+
             saldoTemp -= pago;
+
         });
 
         let dif = +(total - soma()).toFixed(2);
-        pagamentos[livres[livres.length - 1]] += dif;
+
+        if(Math.abs(dif) > 0){
+
+            pagamentos[livres[livres.length-1]] =
+
+                +(pagamentos[livres[livres.length-1]] + dif).toFixed(2);
+
+        }
+
     }
 
     criarParcelaSeFaltar();
+
 }
 
 function initPag(){
