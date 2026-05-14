@@ -561,10 +561,10 @@ function render(){
 
     head.innerHTML = `
     <div>#</div>
-    <div>Paga</div>
-    <div>Falta</div>
+    <div>Amortização</div>
+    <div>Saldo</div>
     <div>Juros</div>
-    <div>Total</div>
+    <div>Parcela</div>
     `;
 
     table.appendChild(head);
@@ -583,7 +583,7 @@ function render(){
         row.className = 'grid row';
 
         row.innerHTML = `
-        <div>${i+1}</div>
+        <div>${i+1}º</div>
 
         <div>
             <input data-pago="${i}" value="${p.toFixed(2)}">
