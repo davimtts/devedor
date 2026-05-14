@@ -74,15 +74,15 @@ h1{
 
 #table{
     width:100%;
-    overflow-x:auto;
+    overflow:hidden;
 }
 
 .grid{
     display:grid;
-    grid-template-columns:50px minmax(110px,1fr) minmax(110px,1fr) minmax(90px,1fr) minmax(110px,1fr);
-    gap:8px;
+    grid-template-columns:32px 1fr 1fr .9fr 1fr;
+    gap:6px;
     align-items:center;
-    min-width:560px;
+    width:100%;
 }
 
 .row{
