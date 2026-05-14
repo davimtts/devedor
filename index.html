@@ -79,30 +79,36 @@ h1{
 
 .grid{
     display:grid;
-    grid-template-columns:32px 1fr 1fr .9fr 1fr;
-    gap:6px;
+    grid-template-columns:22px 1fr 1fr .82fr 1fr;
+    gap:2px;
     align-items:center;
     width:100%;
 }
 
 .row{
-    padding:8px 0;
+    padding:4px 0;
     border-bottom:1px solid #1c1c1c;
+}
+
+.head{
+    font-size:10px;
+    color:#888;
 }
 
 .row input{
     width:100%;
-    background:#000;
-    border:none;
-    color:#00ff9d;
-    padding:8px;
-    border-radius:8px;
-    font-size:16px;
+    min-width:0;
+    padding:4px 3px;
+    font-size:13px;
+    border-radius:6px;
 }
 
-.head{
+.remain,
+.juros{
     font-size:12px;
-    color:#888;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
 }
 
 .sum{
@@ -145,22 +151,34 @@ h1{
 
 @media (max-width:480px){
 
-    .top{
-        grid-template-columns:1fr;
+    body{
+        padding:6px;
     }
 
-    h1{
-        font-size:18px;
+    .wrap{
+        width:100%;
     }
 
     .grid{
-        grid-template-columns:26px 1fr 1fr .8fr 1fr;
-        gap:4px;
-        font-size:12px;
+        grid-template-columns:18px 1fr 1fr .78fr 1fr;
+        gap:1px;
+    }
+
+    .head{
+        font-size:9px;
     }
 
     .row input{
-        padding:6px;
+        padding:3px 2px;
+        font-size:12px;
+    }
+
+    .remain,
+    .juros{
+        font-size:11px;
+    }
+
+    .sum{
         font-size:14px;
     }
 }
