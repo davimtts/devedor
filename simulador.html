@@ -11,57 +11,7 @@
 </head>
 
 <body>
-    <div id="pinScreen" style="
-        display:none;
-        min-height:100vh;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        padding:20px;
-        text-align:center;
-        ">
-
-        <h1>Inserir PIN</h1>
-
-        <p>
-            O PIN normalmente já vem no link enviado.
-        </p>
-
-        <p style="margin-top:20px;">
-            Exemplo:
-        </p>
-
-        <div style="
-    background:#1d1d1d;
-    padding:15px;
-    border-radius:10px;
-    color:#b26cff;
-    font-weight:bold;
-    ">
-            https://davimtts.github.io/simulador/?codigo=FC3AH8
-        </div>
-
-        <input id="pinInput" placeholder="Digite o PIN" style="
-        margin-top:20px;
-        padding:15px;
-        width:300px;
-        border:none;
-        border-radius:10px;
-        ">
-
-        <button onclick="entrarPin()" style="
-        margin-top:15px;
-        padding:12px 20px;
-        border:none;
-        border-radius:10px;
-        cursor:pointer;
-        ">
-            Entrar
-        </button>
-
-    </div>
-    <div class="wrap" id="app">
+    <div class="wrap">
 
         <h1>PainelDoDevedor</h1>
 
@@ -111,30 +61,6 @@
 </body>
 
 <script>
-    const params = new URLSearchParams(location.search);
-    const codigo = params.get('codigo');
-
-    const app = document.getElementById('app');
-    const pinScreen = document.getElementById('pinScreen');
-
-    let parcelasPagas = [];
-
-
-    function entrarPin() {
-
-        const pin = document
-            .getElementById('pinInput')
-            .value
-            .trim();
-
-        location.href =
-            `${window.location.origin}${window.location.pathname}?codigo=${pin}`;
-    }
-
-
-
-
-
     const totalEl = document.getElementById('total');
     const taxaEl = document.getElementById('taxa');
     const parcelasEl = document.getElementById('parcelas');
@@ -156,68 +82,6 @@
             maximumFractionDigits: 2
         });
     }
-    async function carregarPin() {
-
-        if (!codigo) {
-
-            app.style.display = 'none';
-
-            pinScreen.style.display = 'flex';
-
-            return false;
-        }
-
-        try {
-
-            const req = await fetch(`./pins/${codigo}.json`);
-
-            if (!req.ok) {
-                throw new Error('PIN inválido');
-            }
-
-            const dados = await req.json();
-
-            totalEl.value = dados.total;
-            taxaEl.value = dados.taxa;
-
-            parcelas = dados.parcelas;
-
-            pagamentos = [];
-            editadas.clear();
-
-            parcelasPagas = dados.pagas || [];
-
-            fillSelect();
-
-            initPag();
-
-            parcelasPagas.forEach((valor, idx) => {
-
-                pagamentos[idx] = valor;
-
-                editadas.add(idx);
-
-            });
-
-            recalcularNaoEditadas();
-
-            render();
-
-            return true;
-
-        } catch {
-
-            app.style.display = 'none';
-
-            pinScreen.style.display = 'flex';
-
-            return false;
-        }
-    }
-
-
-
-
 
     function fillSelect(max = 36) {
         parcelasEl.innerHTML = '';
@@ -547,8 +411,6 @@
 
             somaJ += j;
 
-            const bloqueada = editadas.has(i);
-
             const row = document.createElement('div');
             row.className = 'grid row';
 
@@ -556,11 +418,7 @@
         <div>${i + 1}º</div>
 
         <div>
-            <input 
-                data-pago="${i}" 
-                value="${p.toFixed(2)}"
-                ${bloqueada ? 'disabled' : ''}
-            >
+            <input data-pago="${i}" value="${p.toFixed(2)}">
         </div>
 
         <div class="remain">${br(falta)}</div>
@@ -568,11 +426,7 @@
         <div class="juros">${br(j)}</div>
 
         <div>
-            <input 
-                data-total="${i}" 
-                value="${totalLinha.toFixed(2)}"
-                ${bloqueada ? 'disabled' : ''}
-            >
+            <input data-total="${i}" value="${totalLinha.toFixed(2)}">
         </div>
         `;
 
@@ -582,35 +436,17 @@
         });
 
         jurosTotal.textContent = br(somaJ);
-
-        parcelasTotal.textContent =
-            br(soma() + somaJ);
+        parcelasTotal.textContent = br(soma() + somaJ);;
 
         document.querySelectorAll('[data-pago]').forEach(el => {
-
-            if (el.disabled) return;
-
             el.oninput = e => {
-
-                onPago(
-                    +e.target.dataset.pago,
-                    e.target.value,
-                    e.target
-                );
+                onPago(+e.target.dataset.pago, e.target.value, e.target);
             };
         });
 
         document.querySelectorAll('[data-total]').forEach(el => {
-
-            if (el.disabled) return;
-
             el.oninput = e => {
-
-                onTotal(
-                    +e.target.dataset.total,
-                    e.target.value,
-                    e.target
-                );
+                onTotal(+e.target.dataset.total, e.target.value, e.target);
             };
         });
     }
@@ -633,13 +469,8 @@
         };
     }
 
-    (async () => {
-
-        const ok = await carregarPin();
-
-        if (!ok) return;
-
-    })();
+    fillSelect();
+    initPag();
 </script>
 
 </html>
