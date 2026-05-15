@@ -2,643 +2,303 @@
 <html lang="pt-BR">
 
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Simulador</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>PainelDoDevedor</title>
+    <link rel="stylesheet" href="style.css">
 
-<style>
-*{
-    box-sizing:border-box;
-}
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial;
+        }
 
-body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    padding:14px;
-}
+        .hidden {
+            display: none;
+        }
 
-h1{
-    font-size:22px;
-    margin:0 0 16px;
-}
+        .pin-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 30px;
+            text-align: center;
+        }
 
-.wrap{
-    width:100%;
-    max-width:980px;
-    margin:auto;
-}
+        .pin-screen input {
+            width: 300px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            margin-top: 20px;
+            font-size: 18px;
+        }
 
-.top{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-    gap:12px;
-    margin-bottom:18px;
-}
+        .pin-screen button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
 
-.card{
-    background:#111;
-    padding:12px;
-    border-radius:12px;
-    width:100%;
-}
+        .exemplo {
+            margin-top: 30px;
+            background: #1d1d1d;
+            padding: 20px;
+            border-radius: 12px;
+            word-break: break-all;
+        }
 
-.card label{
-    display:block;
-    font-size:12px;
-    color:#aaa;
-    margin-bottom:6px;
-}
+        .exemplo span {
+            color: #b26cff;
+            font-weight: bold;
+        }
 
-.card input,
-.card select{
-    background:#000;
-    border:1px solid #333;
-    color:#fff;
-    padding:10px;
-    border-radius:8px;
-    width:100%;
-    font-size:16px;
-}
+        .wrap {
+            padding: 20px;
+        }
 
-.money{color:#00ff9d;}
-.remain{color:#ff9d00;}
-.juros{color:#b26cff;}
-.total{color:#4cff7a;}
+        .grid {
+            display: grid;
+            grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
 
-.warn{
-    color:#777;
-    font-size:12px;
-}
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
 
-#table{
-    width:100%;
-    overflow:hidden;
-}
+        .row {
+            align-items: center;
+        }
 
-.grid{
-    display:grid;
-    grid-template-columns:22px 1fr 1fr .82fr 1fr;
-    gap:2px;
-    align-items:center;
-    width:100%;
-}
+        .head {
+            font-weight: bold;
+        }
 
-.row{
-    padding:4px 0;
-    border-bottom:1px solid #1c1c1c;
-}
-
-.head{
-    font-size:10px;
-    color:#888;
-}
-
-.row input{
-    width:100%;
-    min-width:0;
-    padding:4px 3px;
-    font-size:13px;
-    border-radius:6px;
-    color: #00ff9d;
-    background-color: #000;
-    border: none;
-}
-
-.remain,
-.juros{
-    font-size:12px;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:clip;
-}
-
-.sum{
-    margin-top:16px;
-    font-size:18px;
-    color:#b26cff;
-}
-
-/* CELULAR */
-@media (max-width:768px){
-
-    body{
-        padding:10px;
-    }
-
-    h1{
-        font-size:20px;
-        line-height:1.3;
-    }
-
-    .top{
-        grid-template-columns:1fr 1fr;
-        gap:10px;
-    }
-
-    .card{
-        padding:10px;
-    }
-
-    .card input,
-    .card select{
-        font-size:16px;
-        padding:10px;
-    }
-
-    .sum{
-        font-size:16px;
-    }
-}
-
-@media (max-width:480px){
-
-    body{
-        padding:6px;
-    }
-
-    .wrap{
-        width:100%;
-    }
-
-    .grid{
-        grid-template-columns:18px 1fr 1fr .78fr 1fr;
-        gap:1px;
-    }
-
-    .head{
-        font-size:9px;
-    }
-
-    .row input{
-        padding:3px 2px;
-        font-size:12px;
-    }
-
-    .remain,
-    .juros{
-        font-size:11px;
-    }
-
-    .sum{
-        font-size:14px;
-    }
-}
-</style>
+        .paga input {
+            opacity: .6;
+            pointer-events: none;
+            background: #2d2d2d;
+            color: #aaa;
+        }
+    </style>
 </head>
 
 <body>
-<div class="wrap">
 
-<h1>JuroFlex</h1>
+    <div id="pinScreen" class="pin-screen hidden">
 
-<div class="top">
+        <h1>Inserir PIN</h1>
 
-<div class="card">
-<label>Total dívida</label>
-<input id="total" type="number" value="1800" step="0.01">
-</div>
+        <p>
+            O PIN normalmente já vem no link enviado.
+        </p>
 
-<div class="card">
-<label>Juros %</label>
-<input id="taxa" type="number" value="2.39" step="0.01">
-</div>
+        <div class="exemplo">
+            https://davimtts.github.io/simulador?<span>codigo=FC3AH8</span>
+        </div>
 
-<div class="card">
-<label>Parcelas</label>
-<select id="parcelas"></select>
-</div>
+        <input id="pinInput" placeholder="Digite o PIN">
 
-<div class="card">
-<label>Total automático</label>
-<select id="modoTotal">
-<option value="on">ON</option>
-<option value="off">OFF</option>
+        <button onclick="entrarPin()">
+            Entrar
+        </button>
 
-</select>
-</div>
+    </div>
 
-</div>
+    <div class="wrap hidden" id="app">
 
-<div id="table"></div>
+        <h1>PainelDoDevedor</h1>
 
-<div class="sum">
-Juros total:
-<span class="juros" id="jurosTotal">0,00</span>
-</div>
+        <h3 id="nomeDevedor"></h3>
 
-</div>
-</body>
+        <div class="top">
+
+            <div class="card">
+                <label>Total dívida</label>
+                <input id="total" type="number" disabled>
+            </div>
+
+            <div class="card">
+                <label>Juros %</label>
+                <input id="taxa" type="number" disabled>
+            </div>
+
+            <div class="card">
+                <label>Parcelas</label>
+                <select id="parcelas" disabled></select>
+            </div>
+
+        </div>
+
+        <div id="table"></div>
+
+    </div>
 
 <script>
+
+const params = new URLSearchParams(location.search);
+const codigo = params.get('codigo');
+
+const app = document.getElementById('app');
+const pinScreen = document.getElementById('pinScreen');
+
 const totalEl = document.getElementById('total');
 const taxaEl = document.getElementById('taxa');
 const parcelasEl = document.getElementById('parcelas');
 const table = document.getElementById('table');
-const jurosTotal = document.getElementById('jurosTotal');
-const modoTotalEl = document.getElementById('modoTotal');
 
-let parcelas = 5;
+const nomeEl = document.getElementById('nomeDevedor');
+
 let pagamentos = [];
-let editadas = new Set();
+let pagas = [];
 
-let timer = null;
-let tempoEspera = 4000;
-
-function br(v){
-    return Number(v).toLocaleString('pt-BR',{
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
+function br(v) {
+    return Number(v).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
 }
 
-function fillSelect(max = 36){
-    parcelasEl.innerHTML = '';
-    for(let i=1;i<=max;i++){
-        const o = document.createElement('option');
-        o.value = i;
-        o.textContent = i;
-        if(i === parcelas) o.selected = true;
-        parcelasEl.appendChild(o);
-    }
-}
-
-function soma(){
-    return pagamentos.reduce((a,b)=>a+b,0);
-}
-
-function juros(v){
+function juros(v) {
     return +(v * (+taxaEl.value / 100)).toFixed(2);
 }
 
-function criarParcelaSeFaltar(){
+function entrarPin() {
 
-    let falta = +(+totalEl.value - soma()).toFixed(2);
+    const pin = document.getElementById('pinInput').value.trim();
 
-    if(falta > 0.009){
-        pagamentos.push(falta);
-        parcelas = pagamentos.length;
-        fillSelect();
-    }
+    location.href = '?codigo=' + pin;
 }
 
-function recalcularNaoEditadas(){
+async function carregar() {
 
-    const total = +totalEl.value;
+    if (!codigo) {
 
-    let usado = 0;
-
-    let livres = [];
-
-    for(let i=0;i<pagamentos.length;i++){
-
-        if(editadas.has(i)){
-
-            usado += pagamentos[i];
-
-        }else{
-
-            livres.push(i);
-
-        }
-
-    }
-
-    if(!livres.length){
-
-        criarParcelaSeFaltar();
+        pinScreen.classList.remove('hidden');
 
         return;
-
     }
 
-    /* OFF = divide principal normal */
+    try {
 
-    if(!modoTotalEl || modoTotalEl.value === 'off'){
+        const req = await fetch('./pins/' + codigo + '.json');
 
-        let sobra = +(total - usado).toFixed(2);
-
-        if(sobra < 0) sobra = 0;
-
-        let cent = Math.round(sobra * 100);
-
-        let base = Math.floor(cent / livres.length);
-
-        let resto = cent % livres.length;
-
-        livres.forEach((idx,pos)=>{
-
-            pagamentos[idx] = (base + (pos < resto ? 1 : 0)) / 100;
-
-        });
-
-        criarParcelaSeFaltar();
-
-        return;
-
-    }
-
-    /* ON = parcelas totais iguais */
-
-    let saldoInicial = +(total - usado).toFixed(2);
-
-    if(saldoInicial < 0) saldoInicial = 0;
-
-    let n = livres.length;
-
-    /* busca valor ideal da parcela total */
-
-    let baixo = 0;
-
-    let alto = saldoInicial * 2;
-
-    for(let t=0;t<60;t++){
-
-        let meio = (baixo + alto) / 2;
-
-        let saldo = saldoInicial;
-
-        for(let i=0;i<n;i++){
-
-            let j = juros(saldo);
-
-            let principal = meio - j;
-
-            if(principal < 0) principal = 0;
-
-            if(principal > saldo) principal = saldo;
-
-            saldo -= principal;
-
+        if (!req.ok) {
+            throw new Error('PIN inválido');
         }
 
-        if(saldo > 0){
+        const dados = await req.json();
 
-            baixo = meio;
+        app.classList.remove('hidden');
 
-        }else{
+        nomeEl.textContent = 'Devedor: ' + dados.nome;
 
-            alto = meio;
+        totalEl.value = dados.total;
+        taxaEl.value = dados.taxa;
 
+        pagamentos = dados.valores;
+        pagas = dados.pagas;
+
+        parcelasEl.innerHTML = '';
+
+        for (let i = 1; i <= dados.parcelas; i++) {
+
+            const op = document.createElement('option');
+
+            op.textContent = i;
+
+            parcelasEl.appendChild(op);
         }
 
-    }
-
-    let parcelaIdeal = alto;
-
-    /* aplica resultado */
-
-    let saldo = saldoInicial;
-
-    livres.forEach(idx=>{
-
-        let j = juros(saldo);
-
-        let principal = +(parcelaIdeal - j).toFixed(2);
-
-        if(principal < 0) principal = 0;
-
-        if(principal > saldo) principal = saldo;
-
-        pagamentos[idx] = principal;
-
-        saldo = +(saldo - principal).toFixed(2);
-
-    });
-
-    /* corrige centavos residuais espalhando, não jogando tudo no último */
-
-    if(Math.abs(saldo) > 0){
-
-        for(let i=livres.length-1;i>=0 && Math.abs(saldo)>0;i--){
-
-            let idx = livres[i];
-
-            let add = Math.min(Math.abs(saldo),0.01);
-
-            if(saldo > 0){
-
-                pagamentos[idx] = +(pagamentos[idx] + add).toFixed(2);
-
-                saldo = +(saldo - add).toFixed(2);
-
-            }
-
-        }
-
-    }
-
-    criarParcelaSeFaltar();
-
-}
-
-function initPag(){
-
-    pagamentos = [];
-    editadas.clear();
-
-    let total = +totalEl.value;
-    let base = +(total / parcelas).toFixed(2);
-
-    for(let i=0;i<parcelas;i++){
-        pagamentos.push(base);
-    }
-
-    let dif = +(total - soma()).toFixed(2);
-    pagamentos[pagamentos.length - 1] += dif;
-
-    render();
-}
-
-function mudarParcelas(novoTotal){
-
-    const atual = pagamentos.length;
-
-    if(novoTotal > atual){
-
-        while(pagamentos.length < novoTotal){
-            pagamentos.push(0);
-        }
-
-    }else if(novoTotal < atual){
-
-        pagamentos = pagamentos.slice(0,novoTotal);
-
-        let novoSet = new Set();
-
-        [...editadas].forEach(i=>{
-            if(i < novoTotal) novoSet.add(i);
-        });
-
-        editadas = novoSet;
-    }
-
-    parcelas = novoTotal;
-    fillSelect();
-
-    recalcularNaoEditadas();
-    render();
-}
-
-function iniciarBarra(input){
-
-    input.style.backgroundImage =
-    'linear-gradient(to right,#b26cff 100%,transparent 100%)';
-
-    input.style.backgroundSize = '100% 2px';
-    input.style.backgroundRepeat = 'no-repeat';
-    input.style.backgroundPosition = 'bottom left';
-    input.style.transition = 'none';
-
-    requestAnimationFrame(()=>{
-        input.style.transition =
-        `background-size ${tempoEspera}ms linear`;
-
-        input.style.backgroundSize = '0% 2px';
-    });
-}
-
-function limparBarra(){
-
-    document.querySelectorAll('[data-pago],[data-total]').forEach(inp=>{
-        inp.style.backgroundImage = '';
-        inp.style.backgroundSize = '';
-        inp.style.transition = '';
-    });
-}
-
-function agendarAtualizacao(callback,input){
-
-    clearTimeout(timer);
-    limparBarra();
-    iniciarBarra(input);
-
-    timer = setTimeout(()=>{
-        limparBarra();
-        callback();
         render();
-    },tempoEspera);
-}
 
-function onPago(idx,val,input){
+    } catch (e) {
 
-    pagamentos[idx] = Math.max(0,parseFloat(val) || 0);
-    editadas.add(idx);
+        pinScreen.classList.remove('hidden');
 
-    agendarAtualizacao(()=>{
-        recalcularNaoEditadas();
-    },input);
-}
+        alert('PIN não encontrado');
 
-function onTotal(idx,val,input){
-
-    let falta = +totalEl.value;
-
-    for(let i=0;i<idx;i++){
-        falta -= pagamentos[i];
     }
-
-    let j = juros(falta);
-
-    pagamentos[idx] = Math.max(
-        0,
-        +(((parseFloat(val) || 0) - j).toFixed(2))
-    );
-
-    editadas.add(idx);
-
-    agendarAtualizacao(()=>{
-        recalcularNaoEditadas();
-    },input);
 }
 
-function render(){
+function render() {
 
     table.innerHTML = '';
 
+    let falta = +totalEl.value;
+
     const head = document.createElement('div');
-    head.className = 'grid head row';
+
+    head.className = 'grid head';
 
     head.innerHTML = `
-    <div>#</div>
-    <div>Amortização</div>
-    <div>Saldo</div>
-    <div>Juros</div>
-    <div>Parcela</div>
+        <div>#</div>
+        <div>Amortização</div>
+        <div>Saldo</div>
+        <div>Juros</div>
+        <div>Parcela</div>
     `;
 
     table.appendChild(head);
 
-    let falta = +totalEl.value;
-    let somaJ = 0;
+    pagamentos.forEach((p, i) => {
 
-    pagamentos.forEach((p,i)=>{
+        const j = juros(falta);
 
-        let j = juros(falta);
-        let totalLinha = +(p + j).toFixed(2);
-
-        somaJ += j;
+        const total = +(p + j).toFixed(2);
 
         const row = document.createElement('div');
+
         row.className = 'grid row';
 
+        if (pagas.includes(i)) {
+            row.classList.add('paga');
+        }
+
         row.innerHTML = `
-        <div>${i+1}º</div>
+            <div>${i + 1}º</div>
 
-        <div>
-            <input data-pago="${i}" value="${p.toFixed(2)}">
-        </div>
+            <div>
+                <input 
+                    value="${p.toFixed(2)}"
+                    ${pagas.includes(i) ? 'disabled' : ''}
+                >
+            </div>
 
-        <div class="remain">${br(falta)}</div>
+            <div>${br(falta)}</div>
 
-        <div class="juros">${br(j)}</div>
+            <div>${br(j)}</div>
 
-        <div>
-            <input data-total="${i}" value="${totalLinha.toFixed(2)}">
-        </div>
+            <div>
+                <input 
+                    value="${total.toFixed(2)}"
+                    ${pagas.includes(i) ? 'disabled' : ''}
+                >
+            </div>
         `;
 
         table.appendChild(row);
 
         falta = +(falta - p).toFixed(2);
+
     });
 
-    jurosTotal.textContent = br(somaJ);
-
-    document.querySelectorAll('[data-pago]').forEach(el=>{
-        el.oninput = e=>{
-            onPago(+e.target.dataset.pago,e.target.value,e.target);
-        };
-    });
-
-    document.querySelectorAll('[data-total]').forEach(el=>{
-        el.oninput = e=>{
-            onTotal(+e.target.dataset.total,e.target.value,e.target);
-        };
-    });
 }
 
-parcelasEl.onchange = e=>{
-    mudarParcelas(+e.target.value);
-};
+carregar();
 
-totalEl.oninput = initPag;
-
-taxaEl.oninput = ()=>{
-    recalcularNaoEditadas();
-    render();
-};
-
-if(modoTotalEl){
-    modoTotalEl.onchange = ()=>{
-        recalcularNaoEditadas();
-        render();
-    };
-}
-
-fillSelect();
-initPag();
 </script>
 
+</body>
 </html>
