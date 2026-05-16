@@ -20,10 +20,6 @@ function entrarPin() {
         `${window.location.origin}${window.location.pathname}?PIN=${pin}`;
 }
 
-
-
-
-
 const totalEl = document.getElementById('total');
 const taxaEl = document.getElementById('taxa');
 const parcelasEl = document.getElementById('parcelas');
@@ -85,29 +81,23 @@ function descriptografar(valor, pin) {
 async function carregarPin() {
 
     if (!pin) {
-
-        app.style.display = 'none';
         loading.style.display = 'none ';
-
-        pinScreen.style.display = 'flex';
-
         return false;
     }
 
     try {
-
         const hash = await sha256(pin);
 
         const req = await fetch(`./pins/${hash}.json`);
 
         if (!req.ok) {
             alert('PIN inválido');
-            //redirect para limpar o PIN da URL
-                location.href = window.location.origin + window.location.pathname;
+            location.href = window.location.origin + window.location.pathname;
             throw new Error('PIN inválido');
         }
         loading.style.display = 'none';
         pinScreen.style.display = 'none';
+        app.style.display = 'block';
 
         const dados = await req.json();
 
@@ -120,7 +110,6 @@ async function carregarPin() {
 
         const nome = data.nome;
 
-        // colocar maiuscula na primeira letra de cada palavra do nome
         const nomeFormatado = nome
             .split(' ')
             .map(p => p.charAt(0).toUpperCase() + p.slice(1))

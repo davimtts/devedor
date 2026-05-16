@@ -201,6 +201,30 @@ input::placeholder {
     font-weight: 400;
 }
 
+select {
+    width: 100px;
+    background: rgba(20, 20, 32, 0.9);
+    border: 1.5px solid #2d2d44;
+    border-radius: 1.2rem;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    color: #f1f5f9;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    outline: none;
+}
+select:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+    background: #0f0f1a;
+}
+select option {
+    background: #0f0f1a;
+    color: #f1f5f9;
+}
+
+
+
 .btn-magic {
     background: linear-gradient(95deg, #7c3aed, #a855f7);
     border: none;
