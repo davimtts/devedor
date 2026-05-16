@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>PainelDoDevedor</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="_img/icon.ico">
 
 
 </head>
@@ -39,7 +40,7 @@
     color:#b26cff;
     font-weight:bold;
     ">
-            https://davimtts.github.io/simulador/?codigo=FC3AH8
+            https://davimtts.github.io/simulador/?PIN=ABC123
         </div>
 
         <input id="pinInput" placeholder="Digite o PIN" style="
@@ -69,12 +70,12 @@
 
             <div class="card">
                 <label>Total dívida</label>
-                <input id="total" type="number" value="1800" step="0.01">
+                <input id="total" type="number" value="1800" step="0.01" disabled>
             </div>
 
             <div class="card">
                 <label>Juros %</label>
-                <input id="taxa" type="number" value="2.39" step="0.01">
+                <input id="taxa" type="number" value="0" step="0.01" disabled>
             </div>
 
             <div class="card">
@@ -112,12 +113,12 @@
 
 <script>
     const params = new URLSearchParams(location.search);
-    const codigo = params.get('codigo');
+    const pin = params.get('PIN');
 
     const app = document.getElementById('app');
     const pinScreen = document.getElementById('pinScreen');
 
-    let parcelasPagas = [];
+    let parcelasPagas = new Set();
 
 
     function entrarPin() {
@@ -128,7 +129,7 @@
             .trim();
 
         location.href =
-            `${window.location.origin}${window.location.pathname}?codigo=${pin}`;
+            `${window.location.origin}${window.location.pathname}?PIN=${pin}`;
     }
 
 
@@ -148,7 +149,7 @@
     let editadas = new Set();
 
     let timer = null;
-    let tempoEspera = 4000;
+    let tempoEspera = 3000;
 
     function br(v) {
         return Number(v).toLocaleString('pt-BR', {
@@ -158,7 +159,7 @@
     }
     async function carregarPin() {
 
-        if (!codigo) {
+        if (!pin) {
 
             app.style.display = 'none';
 
@@ -169,11 +170,12 @@
 
         try {
 
-            const req = await fetch(`./pins/${codigo}.json`);
+            const req = await fetch(`./pins/${pin}.json`);
 
             if (!req.ok) {
                 throw new Error('PIN inválido');
             }
+            pinScreen.style.display = 'none';
 
             const dados = await req.json();
 
@@ -185,15 +187,28 @@
             pagamentos = [];
             editadas.clear();
 
-            parcelasPagas = dados.pagas || [];
+            parcelasPagas = new Set();
 
             fillSelect();
 
             initPag();
 
-            parcelasPagas.forEach((valor, idx) => {
+            (dados.pagas || []).forEach((valorParcela, idx) => {
 
-                pagamentos[idx] = valor;
+                let saldo = +totalEl.value;
+
+                for (let i = 0; i < idx; i++) {
+                    saldo -= pagamentos[i];
+                }
+
+                let j = juros(saldo);
+
+                let amortizacao =
+                    +(valorParcela - j).toFixed(2);
+
+                pagamentos[idx] = amortizacao;
+
+                parcelasPagas.add(idx);
 
                 editadas.add(idx);
 
@@ -202,7 +217,7 @@
             recalcularNaoEditadas();
 
             render();
-            pinScreen.style.display = 'none';
+
 
             return true;
 
@@ -548,10 +563,11 @@
 
             somaJ += j;
 
-            const bloqueada = editadas.has(i);
+            const bloqueada = parcelasPagas.has(i);
 
             const row = document.createElement('div');
             row.className = 'grid row';
+            if (bloqueada) row.classList.add('bloqueada');
 
             row.innerHTML = `
         <div>${i + 1}º</div>

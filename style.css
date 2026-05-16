@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -7,7 +9,7 @@ body {
     background: #000;
     color: #fff;
     font-family: Arial, sans-serif;
-    padding: 14px;
+    padding: 0;
 }
 
 h1 {
@@ -19,6 +21,7 @@ h1 {
     width: 100%;
     max-width: 980px;
     margin: auto;
+    padding: 14px;
 }
 
 .top {
@@ -52,6 +55,8 @@ h1 {
     width: 100%;
     font-size: 16px;
 }
+
+
 
 .money {
     color: #00ff9d;
@@ -156,6 +161,28 @@ h1 {
     color: #da8188;
     text-decoration: none;
 }
+
+
+.card input:disabled {
+    background: none;
+    border: none;
+}
+.grid.row.bloqueada {
+ 
+    color: #555;
+}
+.grid.row.bloqueada input {
+    background: none;
+    color: #00613c;
+    border-color: #1a1a1a;
+}
+.grid.row.bloqueada .remain {
+    color: #613600;
+}
+.grid.row.bloqueada .juros {
+    color: #4b2e7c;
+}
+
 
 /* CELULAR */
 @media (max-width:768px) {
