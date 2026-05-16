@@ -1,7 +1,7 @@
 /* font baixadas */
 @font-face {
     font-family: 'test';
-    src: url("https://github.com/davimtts/simulador/blob/55d9d1e44527f8123813026057774ca6072b8a85/_font/nasalization/NasalizationRg.otf") format("opentype");
+    src: url('./_font/nasalization/NasalizationRg.otf') format('opentype');
     font-weight: 400 700;
     font-style: normal;
 }
