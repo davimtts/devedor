@@ -1,7 +1,7 @@
 import base64
 
 # Create a beautifully styled README.md content tailored to the "Painel do Devedor" project
-readme_content = """# 📊 Painel do Devedor
+# 📊 Painel do Devedor
 
 > Uma interface fintech moderna, leve e responsiva para visualização de débitos, cálculo de juros e simulação de quitação de dívidas.
 
@@ -21,7 +21,7 @@ O projeto foi construído sob o conceito de **Fintech Dark Mode**, utilizando um
 O ícone do projeto une o conceito de um **gráfico de barras** (representando o controle e o painel) com uma **seta ascendente que corta a dívida**, formando sutilmente a letra **"P"** de Painel.
 
 <p align="center">
-  <img src="_img/icon.ico" alt="Painel do Devedor Logo Concept" width="150" />
+  <img src="_img/icon.png" alt="Painel do Devedor Logo Concept" width="150" />
 </p>
 
 ---

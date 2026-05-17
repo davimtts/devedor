@@ -213,11 +213,13 @@ select {
     font-weight: 500;
     outline: none;
 }
+
 select:focus {
     border-color: #8b5cf6;
     box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
     background: #0f0f1a;
 }
+
 select option {
     background: #0f0f1a;
     color: #f1f5f9;
@@ -365,21 +367,70 @@ select option {
 
 .copy-btn {
     background: none;
-    border: none;
+    border: 1px solid transparent;
     color: #c084fc;
     cursor: pointer;
     font-size: 0.8rem;
+
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    padding: 4px 8px;
+
+    padding: 4px 10px;
     border-radius: 30px;
-    transition: 0.2s;
+
+    transition:
+        background 0.25s ease,
+        transform 0.2s ease,
+        box-shadow 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
 }
 
 .copy-btn:hover {
     background: #2d2d44;
-    color: white;
+    border-color: #5b5b7a;
+    color: #ffffff;
+
+    transform: translateY(-2px) scale(1.03);
+
+    box-shadow:
+        0 0 12px rgba(192, 132, 252, 0.35),
+        0 4px 15px rgba(0, 0, 0, 0.35);
+}
+
+.copy-btn:active {
+    transform: scale(0.96);
+}
+
+.download-btn {
+    background: #442f2d;
+    border: 1px solid #7a5f5b;
+    color: #c98a5c;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        transform 0.2s ease,
+        box-shadow 0.25s ease,
+        color 0.25s ease;
+}
+
+.download-btn:hover {
+    background: #5a3a34;
+    color: #ffb37a;
+
+    transform: translateY(-2px) scale(1.03);
+
+    box-shadow:
+        0 0 12px rgba(255, 140, 60, 0.35),
+        0 4px 15px rgba(0, 0, 0, 0.35);
+}
+
+.download-btn:active {
+    transform: scale(0.96);
 }
 
 .toast-message {

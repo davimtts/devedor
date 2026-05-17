@@ -31,7 +31,7 @@ const modoTotalEl = document.getElementById('modoTotal');
 
 const nameUser = document.getElementById('nameUser');
 
-let parcelas = 5;
+let parcelas = 0;
 let pagamentos = [];
 let editadas = new Set();
 
@@ -92,34 +92,58 @@ async function carregarPin() {
 
         if (!req.ok) {
             alert('PIN inválido');
-            location.href = window.location.origin + window.location.pathname;
+
+            location.href =
+                window.location.origin +
+                window.location.pathname;
+
             throw new Error('PIN inválido');
         }
+
         loading.style.display = 'none';
         pinScreen.style.display = 'none';
         app.style.display = 'block';
 
         const dados = await req.json();
 
-        const texto = descriptografar(
-            dados.data,
+        /*
+            dados.data[0] = dados principais
+            dados.data[1] = parcelas/pagas
+        */
+
+        const textoPrincipal = descriptografar(
+            dados.data[0],
             pin
         );
 
-        const data = JSON.parse(texto);
+        const textoParcelas = descriptografar(
+            dados.data[1],
+            pin
+        );
+
+        const data = JSON.parse(textoPrincipal);
+
+        const infoParcelas = JSON.parse(textoParcelas);
 
         const nome = data.nome;
 
         const nomeFormatado = nome
             .split(' ')
-            .map(p => p.charAt(0).toUpperCase() + p.slice(1))
+            .map(p =>
+                p.charAt(0).toUpperCase() +
+                p.slice(1)
+            )
             .join(' ');
+
         nameUser.textContent = nomeFormatado;
+
         totalEl.value = data.total;
 
         taxaEl.value = data.taxa;
 
-        parcelas = dados.parcelas;
+        parcelas = infoParcelas.parcelas;
+
+        pagas = infoParcelas.pagas;
 
         pagamentos = [];
         editadas.clear();
