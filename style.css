@@ -14,6 +14,49 @@
 }
 
 
+#pinScreen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    z-index: 9999;
+}
+#pinScreen h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.pin-exemplo {
+    padding: 20px 16px;
+    border-radius: 8px;
+        font-family: 'roboto mono', monospace;
+
+    color: #727272;
+    font-size: 14px;
+    margin-top: 20px;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.pin-exemplo div {
+    background:#1d1d1d;
+    padding:7px;
+    border-radius:10px;
+    font-weight:bold;
+    font-size:0.75rem;
+}
+.pin-exemplo div span {
+    color:#8b5cf6;
+}
+
 #pinInput {
     width: 100%;
     background: rgba(20, 20, 32, 0.9);

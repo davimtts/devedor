@@ -27,36 +27,10 @@
         <img src="https://github.com/davimtts/PainelDevedor/blob/main/_img/fintech.png?raw=true" alt="Logo">
         Fintech Nexus
     </div>
-    <div id="pinScreen" style="
-        display:none;
-        min-height:100vh;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        padding:20px;
-        text-align:center;
-        ">
-
+    <div id="pinScreen">
         <h1>Inserir PIN</h1>
-
-        <p>
-            O PIN normalmente já vem no link enviado.
-        </p>
-
-        <p style="margin-top:20px;">
-            Exemplo:
-        </p>
-
-        <div style="
-    background:#1d1d1d;
-    padding:15px;
-    border-radius:10px;
-    color:#b26cff;
-    font-weight:bold;
-    ">
-            https://davimtts.github.io/simulador/?PIN=ABC123
-        </div>
+        
+        
 
         <input id="pinInput" placeholder="Digite o PIN" style="
         margin-top:20px;
@@ -73,6 +47,15 @@
         ">
             Entrar
         </button>
+
+        <div class="pin-exemplo">
+            <p>
+                O PIN normalmente já vem no link enviado.
+            </p>
+            <div>
+                https://davimtts.github.io/devedor/?PIN=<span>ABC123</span>
+            </div>
+        </div>
 
     </div>
     <div class="wrap" id="app">
