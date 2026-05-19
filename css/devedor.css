@@ -1,0 +1,673 @@
+/* ================================================
+   DEVEDOR.CSS - Futuristic Angular Design
+   Auto Dark/Light Theme
+   ================================================ */
+
+@font-face {
+    font-family: 'test';
+    src: url('../fonts/NasalizationRg.otf') format('opentype');
+    font-weight: 400 700;
+    font-style: normal;
+}
+
+/* -------------------- CSS Variables -------------------- */
+:root {
+    /* Colors - Light Theme */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #f0f1f3;
+    --text-primary: #2d3436;
+    --text-secondary: #636e72;
+    --text-muted: #b2bec3;
+
+    /* Accent Colors */
+    --accent-purple: #6c5ce7;
+    --accent-lavender: #a29bfe;
+    --accent-cyan: #00cec9;
+    --accent-pink: #fd79a8;
+    --accent-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe, #00cec9);
+    --accent-gradient-hover: linear-gradient(135deg, #5b4cdb, #8b7cf8, #00b8b3);
+
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(108, 92, 231, 0.1);
+    --shadow-md: 0 4px 20px rgba(108, 92, 231, 0.15);
+    --shadow-lg: 0 8px 40px rgba(108, 92, 231, 0.2);
+    --shadow-glow: 0 0 30px rgba(108, 92, 231, 0.3);
+
+    /* Borders */
+    --border-color: rgba(108, 92, 231, 0.2);
+    --border-focus: rgba(108, 92, 231, 0.5);
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Typography */
+    --font-family: 'Inter', 'Roboto', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-2xl: 2rem;
+    --font-size-3xl: 2.5rem;
+
+    /* Transitions */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
+
+/* -------------------- Dark Theme -------------------- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #0a0a0f;
+        --bg-secondary: #12121a;
+        --bg-tertiary: #1a1a2e;
+        --text-primary: #e8e8e8;
+        --text-secondary: #a0a0a0;
+        --text-muted: #606060;
+
+        /* Neon/Saturated Accents */
+        --accent-purple: #7c6cf7;
+        --accent-lavender: #b2acff;
+        --accent-cyan: #00ded9;
+        --accent-pink: #ff89b8;
+        --accent-gradient: linear-gradient(135deg, #7c6cf7, #b2acff, #00ded9);
+        --accent-gradient-hover: linear-gradient(135deg, #8d7dff, #c3bdff, #00f0ea);
+
+        /* Shadows */
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+        --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 8px 40px rgba(0, 0, 0, 0.5);
+        --shadow-glow: 0 0 40px rgba(124, 108, 247, 0.4);
+
+        /* Borders */
+        --border-color: rgba(124, 108, 247, 0.3);
+        --border-focus: rgba(124, 108, 247, 0.6);
+    }
+}
+
+/* -------------------- Reset & Base -------------------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Selection */
+::selection {
+    background: var(--accent-purple);
+    color: #fff;
+}
+
+/* -------------------- Loading Screen -------------------- */
+#loading {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-primary);
+    z-index: 9999;
+}
+
+#loading h1 {
+    font-size: var(--font-size-xl);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* -------------------- Logo -------------------- */
+.logo {
+    position: fixed;
+    top: var(--spacing-md);
+    left: var(--spacing-md);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    z-index: 100;
+    padding: var(--spacing-xs) var(--spacing-xs);
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+/* -------------------- PIN Screen -------------------- */
+#pinScreen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: var(--spacing-lg);
+    gap: var(--spacing-md);
+}
+
+#pinScreen h1 {
+    font-size: var(--font-size-2xl);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+#pinInput {
+    width: 100%;
+    max-width: 320px;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-md);
+    font-family: var(--font-family);
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    transition: var(--transition-normal);
+    text-align: center;
+}
+
+#pinInput:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: var(--shadow-glow);
+    background: var(--bg-tertiary);
+}
+
+#pinInput::placeholder {
+    color: var(--text-muted);
+}
+
+.pin-exemplo {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+    max-width: 500px;
+    text-align: center;
+}
+
+.pin-exemplo p {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.pin-exemplo div {
+    font-family: 'Courier New', monospace;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    word-break: break-all;
+}
+
+.pin-exemplo span {
+    color: var(--accent-cyan);
+    font-weight: 700;
+}
+
+/* -------------------- Button Magic -------------------- */
+.btn-magic {
+    position: relative;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #fff;
+    background: var(--accent-gradient);
+    background-size: 200% 200%;
+    background-position: 0% 50%;
+    border: none;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+    transition: var(--transition-normal);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-magic:hover {
+    background-position: 100% 50%;
+    transform: translateY(-3px);
+    box-shadow:
+        var(--shadow-lg),
+        0 5px 30px rgba(108, 92, 231, 0.4),
+        0 5px 30px rgba(0, 206, 201, 0.3);
+}
+
+.btn-magic:active {
+    transform: translateY(-1px);
+}
+
+/* -------------------- Main Wrapper -------------------- */
+.wrap {
+    display: none;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--spacing-xl) var(--spacing-md);
+    padding-top: calc(var(--spacing-xl) + 60px);
+}
+
+.wrap>h1 {
+    font-size: var(--font-size-3xl);
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+    .wrap>h1 {
+        text-shadow: 0 0 40px rgba(124, 108, 247, 0.5);
+    }
+}
+
+/* -------------------- Top Cards Grid -------------------- */
+.top {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.card {
+    background: var(--bg-secondary);
+    padding: var(--spacing-md);
+    border: 1px solid var(--border-color);
+    clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+    transition: var(--transition-normal);
+    position: relative;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent-gradient);
+    opacity: 0;
+    transition: var(--transition-normal);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card label {
+    display: block;
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.card input,
+.card select {
+    width: 100%;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-md);
+    font-family: var(--font-family);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    transition: var(--transition-normal);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.card input:focus,
+.card select:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+}
+
+.card input:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.card select {
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%236c5ce7' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+/* -------------------- Table -------------------- */
+#table {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+    overflow: hidden;
+    margin-bottom: var(--spacing-md);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 60px 1fr 1fr 1fr 1fr;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    align-items: center;
+}
+
+.grid.head {
+    background: var(--accent-gradient);
+    color: #fff;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.grid.row {
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-fast);
+}
+
+.grid.row:last-child {
+    border-bottom: none;
+}
+
+.grid.row:hover {
+    background: var(--bg-tertiary);
+}
+
+.grid.row.bloqueada {
+    background: rgba(0, 206, 201, 0.1);
+    border-left: 4px solid var(--accent-cyan);
+}
+
+.grid.row>div:first-child {
+    font-weight: 700;
+    color: var(--accent-purple);
+}
+
+.grid .input input {
+    width: 100%;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    transition: var(--transition-normal);
+}
+
+.grid .input input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.2);
+}
+
+.grid .input input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: transparent;
+}
+
+.grid .remain {
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+}
+
+.grid .juros {
+    color: var(--accent-pink);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+}
+
+/* -------------------- Summary -------------------- */
+.sum,
+.sumT {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-sm);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+    font-weight: 600;
+}
+
+.sum .juros {
+    color: var(--accent-pink);
+    font-size: var(--font-size-lg);
+}
+
+.sumT .totalPag {
+    color: var(--accent-cyan);
+    font-size: var(--font-size-lg);
+}
+
+/* -------------------- Footer -------------------- */
+.footer {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: var(--spacing-lg) 0;
+    color: var(--text-muted);
+    font-size: var(--font-size-sm);
+}
+
+.footer a {
+    color: var(--accent-purple);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+
+.footer a:hover {
+    color: var(--accent-cyan);
+    text-decoration: underline;
+}
+
+/* -------------------- Responsive - Tablet -------------------- */
+@media (max-width: 900px) {
+    .top {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid {
+        grid-template-columns: 50px 1fr 1fr 1fr 1fr;
+        gap: var(--spacing-xs);
+        font-size: var(--font-size-sm);
+    }
+}
+
+/* -------------------- Responsive - Mobile -------------------- */
+@media (max-width: 600px) {
+    :root {
+        --font-size-2xl: 1.5rem;
+        --font-size-3xl: 1.75rem;
+    }
+
+    .logo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin: 0;
+        justify-content: center;
+    }
+
+    .wrap {
+        padding: var(--spacing-md);
+        padding-top: var(--spacing-md);
+    }
+
+    .top {
+        grid-template-columns: repeat(2, 2fr);
+    }
+
+    .grid {
+        grid-template-columns: 20px repeat(4, 1fr);
+        gap: 10px;
+        padding: var(--spacing-xs);
+        font-size: var(--font-size-xs);
+    }
+    .grid input{
+        text-align: center;
+
+    }
+    .grid .remain{
+        text-align: center;
+    }
+    .grid .juros{
+        text-align: center;
+    }
+
+    .grid.head {
+        font-size: 0.65rem;
+    }
+
+    .grid .input input {
+        padding: 6px 8px;
+        font-size: var(--font-size-xs);
+    }
+
+    #pinScreen {
+        padding: var(--spacing-md);
+    }
+
+    #pinScreen h1 {
+        font-size: var(--font-size-xl);
+    }
+
+    .pin-exemplo {
+        padding: var(--spacing-sm);
+    }
+
+    .pin-exemplo div {
+        font-size: var(--font-size-xs);
+    }
+
+    .btn-magic {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-sm);
+    }
+
+    .sum,
+    .sumT {
+        flex-direction: column;
+        gap: var(--spacing-xs);
+        text-align: center;
+    }
+}
+
+/* -------------------- Very Small Screens -------------------- */
+@media (max-width: 400px) {
+    .grid {
+        grid-template-columns: 35px repeat(4, 1fr);
+        gap: 2px;
+    }
+
+    .grid.head div {
+        font-size: 0.55rem;
+    }
+
+    .grid .input input {
+        padding: 4px 6px;
+    }
+}
+
+/* -------------------- Animations -------------------- */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.wrap {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* -------------------- Scrollbar -------------------- */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-gradient);
+    clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-purple);
+}
+
+/* -------------------- Remove Number Input Spinners -------------------- */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}

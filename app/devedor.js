@@ -47,29 +47,30 @@ function br(v) {
 
 
 async function sha256(texto) {
-
     const encoder = new TextEncoder();
-
     const data = encoder.encode(texto);
-
     const hash = await crypto.subtle.digest(
         'SHA-256',
         data
     );
-
     return [...new Uint8Array(hash)]
         .map(b => b.toString(16).padStart(2, '0'))
         .join('');
 }
+async function sha256Multi(texto, vezes = 1000) {
+    let hash = texto;
+    for (let i = 0; i < vezes; i++) {
+        hash = await sha256(hash);
+    }
+    return hash;
+}
 function criptografar(valor, pin) {
-
     return CryptoJS.AES.encrypt(
         String(valor),
         pin
     ).toString();
 }
 function descriptografar(valor, pin) {
-
     return CryptoJS.AES.decrypt(
         valor,
         pin
@@ -82,11 +83,12 @@ async function carregarPin() {
 
     if (!pin) {
         loading.style.display = 'none ';
+        pinScreen.style.display = 'flex';
         return false;
     }
 
     try {
-        const hash = await sha256(pin);
+        const hash = await sha256Multi(pin, 1000);
 
         const req = await fetch(`./pins/${hash}.json`);
 
@@ -100,16 +102,14 @@ async function carregarPin() {
             throw new Error('PIN inválido');
         }
 
+
+
         loading.style.display = 'none';
-        pinScreen.style.display = 'none';
         app.style.display = 'block';
 
         const dados = await req.json();
 
-        /*
-            dados.data[0] = dados principais
-            dados.data[1] = parcelas/pagas
-        */
+
 
         const textoPrincipal = descriptografar(
             dados.data[0],
@@ -124,6 +124,10 @@ async function carregarPin() {
         const data = JSON.parse(textoPrincipal);
 
         const infoParcelas = JSON.parse(textoParcelas);
+
+        console.log(dados)
+        console.log(data)
+        console.log(infoParcelas)
 
         const nome = data.nome;
 
@@ -141,9 +145,13 @@ async function carregarPin() {
 
         taxaEl.value = data.taxa;
 
-        parcelas = infoParcelas.parcelas;
+        parcelas = Number(infoParcelas.parcelas);
 
-        pagas = infoParcelas.pagas;
+
+
+        pagas = Array.isArray(infoParcelas.pagas)
+            ? infoParcelas.pagas
+            : [];
 
         pagamentos = [];
         editadas.clear();
@@ -154,7 +162,7 @@ async function carregarPin() {
 
         initPag();
 
-        (dados.pagas || []).forEach((valorParcela, idx) => {
+        (pagas || []).forEach((valorParcela, idx) => {
 
             let saldo = +totalEl.value;
 
@@ -196,7 +204,7 @@ async function carregarPin() {
 
 
 
-function fillSelect(max = 36) {
+function fillSelect(max = 24) {
     parcelasEl.innerHTML = '';
     for (let i = 1; i <= max; i++) {
         const o = document.createElement('option');

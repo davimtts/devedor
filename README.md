@@ -2,27 +2,13 @@ import base64
 
 # Create a beautifully styled README.md content tailored to the "Painel do Devedor" project
 # 📊 Painel do Devedor
+<p align="center">
+  <img src="img/fintech.png" alt="Painel do Devedor Logo Concept" width="150" />
+</p>
 
 > Uma interface fintech moderna, leve e responsiva para visualização de débitos, cálculo de juros e simulação de quitação de dívidas.
 
 A proposta do **Painel do Devedor** é transformar a experiência de negociação de dívidas. Em vez de uma abordagem punitiva, o sistema oferece uma ferramenta de parceria e transparência, permitindo que o usuário visualize o que falta pagar, simule cenários com juros e planeje a sua liberdade financeira.
-
----
-
-## 🎨 Identidade Visual & Design
-
-O projeto foi construído sob o conceito de **Fintech Dark Mode**, utilizando uma paleta de cores neon de alto contraste para destacar métricas financeiras essenciais:
-
-* 🟩 **Verde Quitação (`#00ff9d` / `#4cff7a`)**: Usado para valores, pagamentos e saldo total positivo.
-* 🟧 **Laranja Alerta (`#ff9d00`)**: Usado para indicar saldos restantes e parcelas pendentes.
-* 🟪 **Roxo Juros (`#b26cff`)**: Identifica o impacto das taxas, simulações e somatórios do painel.
-
-### Símbolo Oficial (Logo)
-O ícone do projeto une o conceito de um **gráfico de barras** (representando o controle e o painel) com uma **seta ascendente que corta a dívida**, formando sutilmente a letra **"P"** de Painel.
-
-<p align="center">
-  <img src="_img/icon.png" alt="Painel do Devedor Logo Concept" width="150" />
-</p>
 
 ---
 
@@ -35,19 +21,22 @@ O ícone do projeto une o conceito de um **gráfico de barras** (representando o
 
 ---
 
-## 📂 Estrutura do CSS
+## 🔑 Criptografia
 
-O arquivo CSS foi estruturado utilizando boas práticas de arquitetura, dividido em blocos lógicos:
-
-1.  **Configurações Gerais e Resets:** Configuração de `box-sizing`, fontes nativas do sistema e variáveis globais CSS (`:root`).
-2.  **Cards de Entrada (Top Grid):** Layout flexível para os parâmetros globais da simulação.
-3.  **Grid de Simulação (Tabela):** Estrutura principal baseada em `CSS Grid` para alinhamento perfeito dos dados.
-4.  **Responsividade:** Regras específicas para tablets (`768px`) e smartphones (`480px`).
+* **Sistema de PIN:** Varias camadas de SHA-256, para caso algum curioso tente decifrar, só gastar tempo e hadware.
+* **Criptografia AES:** Todo conteudo é guardado em AES para nenhum vazamento.
+```bash
+Mesmo que o projeto seja publico, vai dar uma certa dor de cabeça tentar entender para poder "roubar" informações!
+```
 
 ---
 
 ## 🚀 Como Executar o Projeto
 
-1. Acessar link oficial
+1. Clone o repositório
 ```bash
-https://davimtts.github.io/simulador/
+git clone https://github.com/davimtts/devedor.git
+```
+2. Coloque o GitHub Page
+
+### Pronto, seu sistema esta funcionando

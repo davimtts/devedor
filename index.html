@@ -5,46 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>PainelDoDevedor</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="https://github.com/davimtts/PainelDevedor/blob/main/_img/icon.ico?raw=true">
+    <link rel="stylesheet" href="css/devedor.css">
+    <link rel="icon" href="img/icon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
-    <div id="loading" style="
-        min-height:100vh;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex-direction:column;
-        padding:20px;
-        text-align:center;
-        ">
+    <div id="loading">
         <h1>Carregando...</h1>
     </div>
     <div class="logo">
-        <img src="https://github.com/davimtts/PainelDevedor/blob/main/_img/fintech.png?raw=true" alt="Logo">
-        Fintech Nexus
+        <img src="img/fintech.png" alt="Logo">
     </div>
     <div id="pinScreen">
         <h1>Inserir PIN</h1>
-        
-        
-
-        <input id="pinInput" placeholder="Digite o PIN" style="
-        margin-top:20px;
-        padding:15px;
-        width:300px;
-        ">
-
-        <button  class="btn-magic" onclick="entrarPin()" style="
-        margin-top:15px;
-        padding:12px 20px;
-        border:none;
-        border-radius:10px;
-        cursor:pointer;
-        ">
+        <input id="pinInput" placeholder="Digite o PIN">
+        <button class="btn-magic" onclick="entrarPin()">
             Entrar
         </button>
 
@@ -59,26 +36,20 @@
 
     </div>
     <div class="wrap" id="app">
-
         <h1 id="nameUser"></h1>
-
         <div class="top">
-
             <div class="card">
                 <label>Total dívida</label>
                 <input id="total" type="number" value="1800" step="0.01" disabled>
             </div>
-
             <div class="card">
                 <label>Juros %</label>
                 <input id="taxa" type="number" value="0" step="0.01" disabled>
             </div>
-
             <div class="card">
                 <label>Parcelas</label>
                 <select id="parcelas"></select>
             </div>
-
             <div class="card">
                 <label>Parcelas automáticas</label>
                 <select id="modoTotal">
@@ -87,11 +58,8 @@
 
                 </select>
             </div>
-
         </div>
-
         <div id="table"></div>
-
         <div class="sum">
             Juros total:
             <span class="juros" id="jurosTotal">0,00</span>
@@ -101,12 +69,13 @@
             <span class="totalPag" id="parcelasTotal">0,00</span>
         </div>
         <div class="footer">
-            Criado por <a href="https://github.com/davimtts" target="_blank">davimtts</a>
+            <div>Criado por <a href="https://github.com/davimtts" target="_blank">davimtts</a></div>
+            <i class="fa-brands fa-github"></i>
         </div>
 
     </div>
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-<script src="app/script.js"></script>
+<script src="app/devedor.js"></script>
 
 </html>

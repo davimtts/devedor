@@ -56,7 +56,26 @@ function setButtonLoading(loading) {
     }
 }
 
-function criarDevidendo() {
+async function sha256(texto) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(texto);
+    const hash = await crypto.subtle.digest(
+        'SHA-256',
+        data
+    );
+    return [...new Uint8Array(hash)]
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+}
+async function sha256Multi(texto, vezes = 1000) {
+    let hash = texto;
+    for (let i = 0; i < vezes; i++) {
+        hash = await sha256(hash);
+    }
+    return hash;
+}
+
+async function criarDevidendo() {
     const nome = nomeInput.value.trim();
     const totalRaw = totalInput.value.trim();
     const taxaRaw = taxaInput.value.trim();
@@ -91,64 +110,62 @@ function criarDevidendo() {
 
     setButtonLoading(true);
 
-    setTimeout(() => {
-        try {
-            if (pinCustom.value.trim()) {
-                pin = pinCustom.value.trim();
-            } else {
-                pin = gerarPin();
-            }
-
-
-
-
-            hash = CryptoJS.SHA256(pin).toString();
-            const devidendo = {
-                nome: nome,
-                total: total,
-                taxa: taxa,
-                criadoEm: new Date().toISOString(),
-                versao: "2.0"
-            };
-            const devidendoString = JSON.stringify(devidendo);
-            const devidendoCriptografado = criptografar(devidendoString, pin);
-
-            const load = {
-                parcelas: parcelasSelect.value,
-                pagas: 0
-            }
-
-            const loadString = JSON.stringify(load);
-            const loadCriptografado = criptografar(loadString, pin);
-
-            pinSpan.textContent = pin;
-            devidendoDataSpan.textContent = JSON.stringify({
-                data: [
-                    devidendoCriptografado,
-                    loadCriptografado
-                ]
-            });
-            if (resultContainer.style.display === 'none') {
-                painelCreate.style.display = 'none';
-                resultContainer.style.display = 'block';
-                resultContainer.style.animation = 'none';
-                resultContainer.offsetHeight;
-                resultContainer.style.animation = 'fadeUp 0.5s ease-out';
-            } else {
-                resultContainer.style.animation = 'none';
-                setTimeout(() => {
-                    resultContainer.style.animation = 'fadeUp 0.5s ease-out';
-                }, 10);
-            }
-
-            showToast('✅ Devidendo criado com sucesso!');
-        } catch (err) {
-            console.error(err);
-            showToast('❌ Erro na criptografia, tente novamente', true);
-        } finally {
-            setButtonLoading(false);
+    try {
+        if (pinCustom.value.trim()) {
+            pin = pinCustom.value.trim();
+        } else {
+            pin = gerarPin();
         }
-    }, 200);
+
+
+
+
+        hash = await sha256Multi(pin, 1000);
+        const devidendo = {
+            nome: nome,
+            total: total,
+            taxa: taxa,
+            criadoEm: new Date().toISOString(),
+            versao: "2.0"
+        };
+        const devidendoString = JSON.stringify(devidendo);
+        const devidendoCriptografado = criptografar(devidendoString, pin);
+
+        const load = {
+            parcelas: parcelasSelect.value,
+            pagas: 0
+        }
+
+        const loadString = JSON.stringify(load);
+        const loadCriptografado = criptografar(loadString, pin);
+
+        pinSpan.textContent = pin;
+        devidendoDataSpan.textContent = JSON.stringify({
+            data: [
+                devidendoCriptografado,
+                loadCriptografado
+            ]
+        });
+        if (resultContainer.style.display === 'none') {
+            painelCreate.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.style.animation = 'none';
+            resultContainer.offsetHeight;
+            resultContainer.style.animation = 'fadeUp 0.5s ease-out';
+        } else {
+            resultContainer.style.animation = 'none';
+            setTimeout(() => {
+                resultContainer.style.animation = 'fadeUp 0.5s ease-out';
+            }, 10);
+        }
+
+        showToast('✅ Devidendo criado com sucesso!');
+    } catch (err) {
+        console.error(err);
+        showToast('❌ Erro na criptografia, tente novamente', true);
+    } finally {
+        setButtonLoading(false);
+    }
 }
 
 function copyToClipboard(text, type) {

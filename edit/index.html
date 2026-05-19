@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Edit</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="../css/edit.css">
+    <link rel="icon" href="../img/icon.ico">
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Painel de Edit</h1>
+
+        <div class="card">
+
+            <div class="row">
+                <div>
+                    <label>PIN</label>
+                    <input id="pinInput" placeholder="Digite o PIN">
+                </div>
+
+                <div style="display:flex;align-items:end;">
+                    <button onclick="carregar()">Carregar</button>
+                </div>
+            </div>
+
+            <div id="status"></div>
+
+        </div>
+
+        <div class="card hidden" id="editor">
+
+            <h2 style="margin-bottom:20px;">Dados</h2>
+
+            <div class="row">
+                <div>
+                    <label>Nome</label>
+                    <input id="nome">
+                </div>
+
+                <div>
+                    <label>Total</label>
+                    <input id="total" type="number">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Taxa</label>
+                    <input id="taxa" type="number" step="0.01">
+                </div>
+
+                <div>
+                    <label>Parcelas</label>
+                    <input id="parcelas">
+                </div>
+            </div>
+
+            <div class="row">
+                <div>
+                    <label>Versão</label>
+                    <input id="versao">
+                </div>
+
+                <div>
+                    <label>Criado Em</label>
+                    <input id="criadoEm">
+                </div>
+            </div>
+
+            <div>
+                <label>Pagas (separadas por vírgula)</label>
+                <textarea id="pagas"></textarea>
+            </div>
+
+            <button style="margin-top:20px;" onclick="gerarNovoJSON()">
+                Gerar Novo JSON
+            </button>
+
+            <div class="json-preview" id="preview"></div>
+
+        </div>
+
+    </div>
+
+</body>
+<script src="../app/edit.js"></script>
+</html>
