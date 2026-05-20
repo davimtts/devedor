@@ -98,7 +98,7 @@ async function carregarPin() {
             alert('PIN inválido');
 
 
-            umami.track('errou_pin');
+            umami.track('errou_pin', { pin });
             location.href =
                 window.location.origin +
                 window.location.pathname;
