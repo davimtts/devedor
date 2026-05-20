@@ -1,7 +1,6 @@
 import base64
 
-# Create a beautifully styled README.md content tailored to the "Painel do Devedor" project
-# 📊 Painel do Devedor
+# Painel do Devedor
 <p align="center">
   <img src="img/fintech.png" alt="Painel do Devedor Logo Concept" width="150" />
 </p>

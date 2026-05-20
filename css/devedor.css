@@ -25,6 +25,7 @@
     --accent-lavender: #a29bfe;
     --accent-cyan: #00cec9;
     --accent-pink: #fd79a8;
+    --accent-pink-block: #fd79a77c;
     --accent-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe, #00cec9);
     --accent-gradient-hover: linear-gradient(135deg, #5b4cdb, #8b7cf8, #00b8b3);
 
@@ -350,6 +351,14 @@ body {
     color: var(--text-secondary);
     margin-bottom: var(--spacing-xs);
 }
+.card span{
+    display: block;
+    width: 100%;
+    font-size: var(--font-size-md);
+    font-family: var(--font-family);
+    color: var(--text-primary);
+    padding: 0 var(--spacing-sm) ;
+}
 
 .card input,
 .card select {
@@ -427,8 +436,11 @@ body {
 }
 
 .grid.row.bloqueada {
-    background: rgba(0, 206, 201, 0.1);
+    background: rgba(79, 0, 206, 0.1);
     border-left: 4px solid var(--accent-cyan);
+}
+.grid.row.bloqueada .juros{
+    color: var(--accent-pink-block);
 }
 
 .grid.row>div:first-child {

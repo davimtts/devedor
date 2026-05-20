@@ -29,8 +29,10 @@ const parcelasTotal = document.getElementById('parcelasTotal');
 const modoTotalEl = document.getElementById('modoTotal');
 
 
-const nameUser = document.getElementById('nameUser');
 
+
+const nameUser = document.getElementById('nameUser');
+let data = [];
 let parcelas = 0;
 let pagamentos = [];
 let editadas = new Set();
@@ -121,7 +123,7 @@ async function carregarPin() {
             pin
         );
 
-        const data = JSON.parse(textoPrincipal);
+         data = JSON.parse(textoPrincipal);
 
         const infoParcelas = JSON.parse(textoParcelas);
 
@@ -141,9 +143,9 @@ async function carregarPin() {
 
         nameUser.textContent = nomeFormatado;
 
-        totalEl.value = data.total;
+        totalEl.textContent = data.total;
 
-        taxaEl.value = data.taxa;
+        taxaEl.textContent = data.taxa;
 
         parcelas = Number(infoParcelas.parcelas);
 
@@ -164,7 +166,7 @@ async function carregarPin() {
 
         (pagas || []).forEach((valorParcela, idx) => {
 
-            let saldo = +totalEl.value;
+            let saldo = +data.total;
 
             for (let i = 0; i < idx; i++) {
                 saldo -= pagamentos[i];
@@ -220,12 +222,12 @@ function soma() {
 }
 
 function juros(v) {
-    return +(v * (+taxaEl.value / 100)).toFixed(2);
+    return +(v * (+data.taxa / 100)).toFixed(2);
 }
 
 function criarParcelaSeFaltar() {
 
-    let falta = +(+totalEl.value - soma()).toFixed(2);
+    let falta = +(+data.total - soma()).toFixed(2);
 
     if (falta > 0.009) {
         pagamentos.push(falta);
@@ -236,7 +238,7 @@ function criarParcelaSeFaltar() {
 
 function recalcularNaoEditadas() {
 
-    const total = +totalEl.value;
+    const total = +data.total;
 
     let usado = 0;
 
@@ -389,7 +391,7 @@ function initPag() {
     pagamentos = [];
     editadas.clear();
 
-    let total = +totalEl.value;
+    let total = +data.total;
     let base = +(total / parcelas).toFixed(2);
 
     for (let i = 0; i < parcelas; i++) {
@@ -485,7 +487,7 @@ function onPago(idx, val, input) {
 
 function onTotal(idx, val, input) {
 
-    let falta = +totalEl.value;
+    let falta = +data.total;
 
     for (let i = 0; i < idx; i++) {
         falta -= pagamentos[i];
@@ -522,7 +524,7 @@ function render() {
 
     table.appendChild(head);
 
-    let falta = +totalEl.value;
+    let falta = +data.total;
     let somaJ = 0;
 
     pagamentos.forEach((p, i) => {
@@ -603,13 +605,6 @@ function render() {
 
 parcelasEl.onchange = e => {
     mudarParcelas(+e.target.value);
-};
-
-totalEl.oninput = initPag;
-
-taxaEl.oninput = () => {
-    recalcularNaoEditadas();
-    render();
 };
 
 if (modoTotalEl) {

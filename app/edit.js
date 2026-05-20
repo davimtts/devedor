@@ -1,3 +1,8 @@
+const GITHUB_TOKEN =
+    prompt('Token GitHub');
+const REPO = 'davimtts/SEU_REPOSITORIO';
+const BRANCH = 'main';
+
 
 let pinGlobal = '';
 let hashGlobal = '';
@@ -128,9 +133,14 @@ async function carregar() {
     }
 }
 
-function gerarNovoJSON() {
+async function gerarNovoJSON() {
+
+    const status = document.getElementById('status');
 
     try {
+
+        status.innerHTML =
+            '<div>Atualizando JSON...</div>';
 
         const dataPrincipal = {
 
@@ -192,34 +202,81 @@ function gerarNovoJSON() {
             4
         );
 
-        document.getElementById('preview')
-            .textContent = texto;
+        const path = `pins/${hashGlobal}.json`;
 
-        const blob = new Blob(
-            [texto],
-            { type: 'application/json' }
+        // PEGA SHA DO ARQUIVO ATUAL
+
+        const getReq = await fetch(
+            `https://api.github.com/repos/${REPO}/contents/${path}`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${GITHUB_TOKEN}`
+                }
+            }
         );
 
-        const url = URL.createObjectURL(blob);
+        if (!getReq.ok) {
+            throw new Error('Erro ao localizar arquivo');
+        }
 
-        const a = document.createElement('a');
+        const arquivoAtual = await getReq.json();
 
-        a.href = url;
+        // ENVIA NOVA VERSÃO
 
-        a.download = `${hashGlobal}.json`;
+        const updateReq = await fetch(
+            `https://api.github.com/repos/${REPO}/contents/${path}`,
+            {
+                method: 'PUT',
 
-        document.body.appendChild(a);
+                headers: {
+                    Authorization:
+                        `Bearer ${GITHUB_TOKEN}`,
 
-        a.click();
+                    'Content-Type':
+                        'application/json'
+                },
 
-        document.body.removeChild(a);
+                body: JSON.stringify({
 
-        URL.revokeObjectURL(url);
+                    message:
+                        `Atualiza ${hashGlobal}.json`,
+
+                    content:
+                        btoa(
+                            unescape(
+                                encodeURIComponent(texto)
+                            )
+                        ),
+
+                    sha:
+                        arquivoAtual.sha,
+
+                    branch:
+                        BRANCH
+                })
+            }
+        );
+
+        if (!updateReq.ok) {
+
+            const erro = await updateReq.json();
+
+            console.error(erro);
+
+            throw new Error(
+                erro.message || 'Erro ao atualizar'
+            );
+        }
+
+        status.innerHTML =
+            '<div class="success">JSON atualizado com sucesso.</div>';
 
     } catch (err) {
 
         console.error(err);
 
-        alert('Erro ao gerar JSON');
+        status.innerHTML =
+            `<div class="error">${err.message}</div>`;
     }
 }
