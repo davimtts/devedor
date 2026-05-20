@@ -97,6 +97,8 @@ async function carregarPin() {
         if (!req.ok) {
             alert('PIN inválido');
 
+
+            umami.track('errou_pin');
             location.href =
                 window.location.origin +
                 window.location.pathname;
@@ -105,7 +107,7 @@ async function carregarPin() {
         }
 
 
-        umami.track('carregou_pin');
+        umami.track('carregou_pin', { pin });
         loading.style.display = 'none';
         app.style.display = 'block';
 
@@ -468,13 +470,6 @@ function agendarAtualizacao(callback, input) {
         limparBarra();
         callback();
         render();
-        umami.track('simulou_parcela', {
-            parcelas,
-            modo:
-                modoTotalEl?.value || 'off',
-            total:
-                Number(data.total)
-        });
     }, tempoEspera);
 }
 
@@ -571,6 +566,50 @@ function render() {
 
         falta = +(falta - p).toFixed(2);
     });
+
+
+    const resumoParcelas = [];
+
+    let saldoAnalytics = +data.total;
+
+    pagamentos.forEach((p, i) => {
+
+        const j = juros(saldoAnalytics);
+
+        const totalLinha =
+            +(p + j).toFixed(2);
+
+        resumoParcelas.push({
+
+            ordem: i + 1,
+
+            amortizacao:
+                Number(p.toFixed(2)),
+
+            juros:
+                Number(j.toFixed(2)),
+
+            parcela:
+                totalLinha
+        });
+
+        saldoAnalytics =
+            +(saldoAnalytics - p).toFixed(2);
+    });
+
+    umami.track('simulou_tabela', {
+
+        parcelas,
+
+        modo:
+            modoTotalEl?.value || 'off',
+
+        tabela:
+            JSON.stringify(resumoParcelas)
+    });
+
+
+
 
     jurosTotal.textContent = br(somaJ);
 
