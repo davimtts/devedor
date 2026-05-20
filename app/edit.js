@@ -44,6 +44,11 @@ function entrar() {
             .classList
             .remove('hidden');
 
+        document
+            .getElementById('create')
+            .classList
+            .remove('hidden');
+
         status.innerHTML =
             '<div class="success">Acesso liberado</div>';
 
@@ -327,5 +332,182 @@ async function gerarNovoJSON() {
 
         status.innerHTML =
             `<div class="error">${err.message}</div>`;
+    }
+}
+
+
+async function criarNovoJSON() {
+    const status = document.getElementById('create-status');
+    const preview =
+        document.getElementById('create-preview');
+
+    try {
+
+        status.innerHTML =
+            'Criando JSON...';
+
+        let pin = document
+            .getElementById('create-pin')
+            .value
+            .trim();
+
+        // GERA PIN AUTOMÁTICO
+
+        if (!pin) {
+
+            pin =
+                Math.random()
+                    .toString(36)
+                    .slice(2, 10);
+        }
+
+        const hash =
+            await sha256Multi(pin, 1000);
+
+        const dataPrincipal = {
+
+            nome:
+                document
+                    .getElementById('create-nome')
+                    .value,
+
+            total:
+                parseFloat(
+                    document
+                        .getElementById('create-total')
+                        .value
+                ),
+
+            taxa:
+                parseFloat(
+                    document
+                        .getElementById('create-taxa')
+                        .value
+                ),
+
+            versao:
+                '1.0',
+
+            criadoEm:
+                new Date()
+                    .toISOString()
+        };
+
+        const dataParcelas = {
+
+            parcelas:
+                document
+                    .getElementById('create-parcelas')
+                    .value,
+
+            pagas: []
+        };
+
+        const enc1 = criptografar(
+            JSON.stringify(dataPrincipal),
+            pin
+        );
+
+        const enc2 = criptografar(
+            JSON.stringify(dataParcelas),
+            pin
+        );
+
+        const finalJSON = {
+
+            data: [
+                enc1,
+                enc2
+            ]
+        };
+
+        const texto = JSON.stringify(
+            finalJSON,
+            null,
+            4
+        );
+
+        const path =
+            `pins/${hash}.json`;
+
+        // VERIFICA SE JÁ EXISTE
+
+        const checkReq = await fetch(
+            `https://api.github.com/repos/${REPO}/contents/${path}`,
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${GITHUB_TOKEN}`
+                }
+            }
+        );
+
+        if (checkReq.ok) {
+
+            throw new Error(
+                'PIN já existe'
+            );
+        }
+
+        // CRIA ARQUIVO
+
+        const createReq = await fetch(
+            `https://api.github.com/repos/${REPO}/contents/${path}`,
+            {
+                method: 'PUT',
+
+                headers: {
+
+                    Authorization:
+                        `Bearer ${GITHUB_TOKEN}`,
+
+                    'Content-Type':
+                        'application/json'
+                },
+
+                body: JSON.stringify({
+
+                    message:
+                        `Cria ${hash}.json`,
+
+                    content:
+                        btoa(
+                            unescape(
+                                encodeURIComponent(texto)
+                            )
+                        ),
+
+                    branch:
+                        BRANCH
+                })
+            }
+        );
+
+        if (!createReq.ok) {
+
+            const erro =
+                await createReq.json();
+
+            console.error(erro);
+
+            throw new Error(
+                erro.message ||
+                'Erro ao criar'
+            );
+        }
+
+        status.innerHTML = `<div class="success">Devedor criado com sucesso</div`
+
+        preview.innerHTML = `https://davimtts.github.io/devedor/?PIN=${pin}`;
+
+    } catch (err) {
+
+        console.error(err);
+
+        status.innerHTML = `
+            <div class="error">
+                ${err.message}
+            </div>
+        `;
     }
 }

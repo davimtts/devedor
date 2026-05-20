@@ -15,7 +15,7 @@
 
     <div class="container">
 
-        <h1>Painel de Edit</h1>
+        <h1>Painel Adm</h1>
 
         <div class="card" id="senha">
             <div class="row">
@@ -31,71 +31,109 @@
             <div id="statusSenha"></div>
         </div>
 
-        <div class="card hidden" id="pin">
-            <div class="row">
-                <div>
-                    <label>PIN</label>
-                    <input id="pinInput" placeholder="Digite o PIN">
+
+        <div class="double-column">
+            <div class="column">
+                <div class="card hidden" id="pin">
+                    <div class="row">
+                        <div>
+                            <label>PIN</label>
+                            <input id="pinInput" placeholder="Digite o PIN">
+                        </div>
+
+                        <div style="display:flex;align-items:end;">
+                            <button onclick="carregar()">Carregar</button>
+                        </div>
+                    </div>
+                    <div id="status"></div>
                 </div>
 
-                <div style="display:flex;align-items:end;">
-                    <button onclick="carregar()">Carregar</button>
+                <div class="card hidden" id="editor">
+                    <h2 style="margin-bottom:20px;">Dados</h2>
+                    <div class="row">
+                        <div>
+                            <label>Nome</label>
+                            <input id="nome">
+                        </div>
+                        <div>
+                            <label>Total</label>
+                            <input id="total" type="number">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div>
+                            <label>Taxa</label>
+                            <input id="taxa" type="number" step="0.01">
+                        </div>
+                        <div>
+                            <label>Parcelas</label>
+                            <input id="parcelas">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label>Versão</label>
+                            <input id="versao">
+                        </div>
+
+                        <div>
+                            <label>Criado Em</label>
+                            <input id="criadoEm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label>Pagas (separadas por vírgula)</label>
+                        <textarea id="pagas"></textarea>
+                    </div>
+
+                    <button style="margin-top:20px;" onclick="gerarNovoJSON()">
+                        Enviar
+                    </button>
                 </div>
             </div>
-            <div id="status"></div>
-        </div>
+            <div class="column">
+                <div class="card hidden" id="create">
+                    <div class="row">
+                        <div>
+                            <label>Nome</label>
+                            <input id="create-nome">
+                        </div>
+                        <div>
+                            <label>Total</label>
+                            <input id="create-total" type="number">
+                        </div>
+                    </div>
 
-        <div class="card hidden" id="editor">
+                    <div class="row">
+                        <div>
+                            <label>Taxa</label>
+                            <input id="create-taxa" type="number" step="0.01">
+                        </div>
+                        <div>
+                            <label>Parcelas</label>
+                            <input id="create-parcelas">
+                        </div>
+                    </div>
 
-            <h2 style="margin-bottom:20px;">Dados</h2>
+                    <div class="row">
+                        <div>
+                            <label>PIN (opiconal)</label>
+                            <input id="create-pin" minlength="6">
+                        </div>
+                    </div>
 
-            <div class="row">
-                <div>
-                    <label>Nome</label>
-                    <input id="nome">
-                </div>
+                    <button style="margin-top:20px;" onclick="criarNovoJSON()">
+                        Criar
+                    </button>
 
-                <div>
-                    <label>Total</label>
-                    <input id="total" type="number">
+                    <div class="status" id="create-status"></div>
+
+                    <div class="url-preview" id="create-preview"></div>
+
                 </div>
             </div>
-
-            <div class="row">
-                <div>
-                    <label>Taxa</label>
-                    <input id="taxa" type="number" step="0.01">
-                </div>
-
-                <div>
-                    <label>Parcelas</label>
-                    <input id="parcelas">
-                </div>
-            </div>
-
-            <div class="row">
-                <div>
-                    <label>Versão</label>
-                    <input id="versao">
-                </div>
-
-                <div>
-                    <label>Criado Em</label>
-                    <input id="criadoEm">
-                </div>
-            </div>
-
-            <div>
-                <label>Pagas (separadas por vírgula)</label>
-                <textarea id="pagas"></textarea>
-            </div>
-
-            <button style="margin-top:20px;" onclick="gerarNovoJSON()">
-                Enviar
-            </button>
-
-            <div class="json-preview" id="preview"></div>
-
         </div>
 
     </div>

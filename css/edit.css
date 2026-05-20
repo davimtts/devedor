@@ -101,11 +101,31 @@ body::before {
 
 /* Container */
 .container {
-  max-width: 720px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 28px;
+  align-items: center;
+}
+
+.double-column {
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+  width: 1468px;
+  margin: 0 auto;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.double-column > * {
+  flex: 1;
+}
+.card#senha {
+  min-width: 720px;
 }
 
 /* Title */
@@ -151,6 +171,8 @@ h2::before {
   background: var(--accent-gradient);
   clip-path: polygon(0 0, 100% 4px, 100% calc(100% - 4px), 0 100%);
 }
+
+
 
 
 /* Cards */
@@ -324,7 +346,7 @@ button:active {
 }
 
 /* Status Messages */
-#status {
+#status, #statusSenha, #create-status {
   margin-top: 16px;
   padding: 12px 18px;
   font-size: 0.9rem;
@@ -342,12 +364,12 @@ button:active {
   display: none;
 }
 
-#status:not(:empty) {
+#status:not(:empty), #statusSenha:not(:empty), #create-status:not(:empty) {
   display: block;
 }
 
 /* JSON Preview */
-.json-preview {
+.url-preview {
   margin-top: 24px;
   padding: 20px;
   background: var(--input-bg);
@@ -371,20 +393,20 @@ button:active {
   display: none;
 }
 
-.json-preview:not(:empty) {
+.url-preview:not(:empty) {
   display: block;
 }
 
 /* Custom Scrollbar */
-.json-preview::-webkit-scrollbar {
+.url-preview::-webkit-scrollbar {
   width: 8px;
 }
 
-.json-preview::-webkit-scrollbar-track {
+.url-preview::-webkit-scrollbar-track {
   background: var(--input-bg);
 }
 
-.json-preview::-webkit-scrollbar-thumb {
+.url-preview::-webkit-scrollbar-thumb {
   background: var(--accent-primary);
   clip-path: polygon(0 4px, 100% 0, 100% 100%, 0 calc(100% - 4px));
 }
