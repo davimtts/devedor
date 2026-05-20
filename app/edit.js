@@ -1,11 +1,60 @@
-const GITHUB_TOKEN =
-    prompt('Token GitHub');
-const REPO = 'davimtts/SEU_REPOSITORIO';
+const TOKEN_CRIPTOGRAFADO = 'U2FsdGVkX195wvST+5q9FgwiR+GQf9gFXfmB8iCAXZAER26ndI2C3xQ7Jdx2+EEDeBHBtZMpJcZJ8s1G2PGqig==';
+let GITHUB_TOKEN = '';
+const REPO = 'davimtts/devedor';
 const BRANCH = 'main';
-
 
 let pinGlobal = '';
 let hashGlobal = '';
+
+
+function entrar() {
+
+    const senha = document
+        .getElementById('passInput')
+        .value
+        .trim();
+
+    const status = document.getElementById('statusSenha');
+
+    try {
+
+        const token =
+            CryptoJS.AES.decrypt(
+                TOKEN_CRIPTOGRAFADO,
+                senha
+            ).toString(CryptoJS.enc.Utf8);
+
+        if (
+            !token.startsWith('ghp_') &&
+            !token.startsWith('github_pat_')
+        ) {
+
+            throw new Error('Senha inválida');
+        }
+
+        GITHUB_TOKEN = token;
+
+        document
+            .getElementById('senha')
+            .classList
+            .add('hidden');
+
+        document
+            .getElementById('pin')
+            .classList
+            .remove('hidden');
+
+        status.innerHTML =
+            '<div class="success">Acesso liberado</div>';
+
+    } catch (err) {
+
+        console.error(err);
+
+        status.innerHTML =
+            '<div class="error">Senha inválida</div>';
+    }
+}
 
 async function sha256(texto) {
 
@@ -122,7 +171,7 @@ async function carregar() {
             .remove('hidden');
 
         status.innerHTML =
-            '<div class="success">JSON carregado com sucesso</div>';
+            '<div class="success">Dados carregado com sucesso</div>';
 
     } catch (err) {
 
@@ -140,7 +189,7 @@ async function gerarNovoJSON() {
     try {
 
         status.innerHTML =
-            '<div>Atualizando JSON...</div>';
+            '<div>Atualizando Dados...</div>';
 
         const dataPrincipal = {
 
@@ -270,7 +319,7 @@ async function gerarNovoJSON() {
         }
 
         status.innerHTML =
-            '<div class="success">JSON atualizado com sucesso.</div>';
+            '<div class="success">Dados atualizados com sucesso.</div>';
 
     } catch (err) {
 

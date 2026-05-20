@@ -17,8 +17,21 @@
 
         <h1>Painel de Edit</h1>
 
-        <div class="card">
+        <div class="card" id="senha">
+            <div class="row">
+                <div>
+                    <label>Senha Admin</label>
+                    <input id="passInput" placeholder="Digite a Senha">
+                </div>
 
+                <div style="display:flex;align-items:end;">
+                    <button onclick="entrar()">Entrar</button>
+                </div>
+            </div>
+            <div id="statusSenha"></div>
+        </div>
+
+        <div class="card hidden" id="pin">
             <div class="row">
                 <div>
                     <label>PIN</label>
@@ -29,9 +42,7 @@
                     <button onclick="carregar()">Carregar</button>
                 </div>
             </div>
-
             <div id="status"></div>
-
         </div>
 
         <div class="card hidden" id="editor">
@@ -80,7 +91,7 @@
             </div>
 
             <button style="margin-top:20px;" onclick="gerarNovoJSON()">
-                Gerar Novo JSON
+                Enviar
             </button>
 
             <div class="json-preview" id="preview"></div>
@@ -91,4 +102,5 @@
 
 </body>
 <script src="../app/edit.js"></script>
+
 </html>

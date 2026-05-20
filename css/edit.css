@@ -152,6 +152,7 @@ h2::before {
   clip-path: polygon(0 0, 100% 4px, 100% calc(100% - 4px), 0 100%);
 }
 
+
 /* Cards */
 .card {
   background: var(--bg-card);
