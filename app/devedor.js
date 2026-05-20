@@ -105,7 +105,7 @@ async function carregarPin() {
         }
 
 
-
+        umami.track('carregou_pin');
         loading.style.display = 'none';
         app.style.display = 'block';
 
@@ -123,13 +123,9 @@ async function carregarPin() {
             pin
         );
 
-         data = JSON.parse(textoPrincipal);
+        data = JSON.parse(textoPrincipal);
 
         const infoParcelas = JSON.parse(textoParcelas);
-
-        console.log(dados)
-        console.log(data)
-        console.log(infoParcelas)
 
         const nome = data.nome;
 
@@ -472,6 +468,13 @@ function agendarAtualizacao(callback, input) {
         limparBarra();
         callback();
         render();
+        umami.track('simulou_parcela', {
+            parcelas,
+            modo:
+                modoTotalEl?.value || 'off',
+            total:
+                Number(data.total)
+        });
     }, tempoEspera);
 }
 
@@ -605,12 +608,23 @@ function render() {
 
 parcelasEl.onchange = e => {
     mudarParcelas(+e.target.value);
+    umami.track('alterou_quantidade_parcelas', {
+        parcelas:
+            +e.target.value,
+        modo:
+            modoTotalEl?.value || 'off'
+    });
 };
 
 if (modoTotalEl) {
     modoTotalEl.onchange = () => {
         recalcularNaoEditadas();
         render();
+        umami.track('alterou_modo_parcelamento', {
+            modo:
+                modoTotalEl.value,
+            parcelas
+        });
     };
 }
 
