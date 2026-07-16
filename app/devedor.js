@@ -26,6 +26,8 @@ const parcelasEl = document.getElementById('parcelas');
 const table = document.getElementById('table');
 const jurosTotal = document.getElementById('jurosTotal');
 const parcelasTotal = document.getElementById('parcelasTotal');
+const parcelasPagasTotal = document.getElementById('parcelasPagasTotal');
+const parcelasRestantes = document.getElementById('parcelasRestantes');
 const modoTotalEl = document.getElementById('modoTotal');
 
 
@@ -609,12 +611,32 @@ function render() {
     });
 
 
+    let totalPago = 0;
 
+    let saldo = +data.total;
+
+    pagamentos.forEach((p, i) => {
+
+        const j = juros(saldo);
+        const parcela = p + j;
+
+        if (parcelasPagas.has(i)) {
+            totalPago += parcela;
+        }
+
+        saldo -= p;
+    });
+
+    const totalParcelas = soma() + somaJ;
+    const restante = totalParcelas - totalPago;
 
     jurosTotal.textContent = br(somaJ);
 
-    parcelasTotal.textContent =
-        br(soma() + somaJ);
+    parcelasTotal.textContent = br(totalParcelas);
+
+    parcelasPagasTotal.textContent = br(totalPago);
+
+    parcelasRestantes.textContent = br(restante);
 
     document.querySelectorAll('[data-pago]').forEach(el => {
 
