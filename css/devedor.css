@@ -485,12 +485,12 @@ body {
 }
 
 /* -------------------- Summary -------------------- */
-.sum,
-.sumT {
+.sum {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-sm) 0;
+    padding: var(--spacing-sm) 10px;
+    
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -621,10 +621,8 @@ body {
         font-size: var(--font-size-sm);
     }
 
-    .sum,
-    .sumT {
+    .sum {
         flex-direction: column;
-        gap: var(--spacing-xs);
         text-align: center;
     }
 }
