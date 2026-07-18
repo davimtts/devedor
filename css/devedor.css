@@ -359,13 +359,14 @@ body {
     color: var(--text-secondary);
     margin-bottom: var(--spacing-xs);
 }
-.card span{
+
+.card span {
     display: block;
     width: 100%;
     font-size: var(--font-size-md);
     font-family: var(--font-family);
     color: var(--text-primary);
-    padding: 0 var(--spacing-sm) ;
+    padding: 0 var(--spacing-sm);
 }
 
 .card input,
@@ -447,7 +448,8 @@ body {
     background: rgba(79, 0, 206, 0.1);
     border-left: 4px solid var(--accent-cyan);
 }
-.grid.row.bloqueada .juros{
+
+.grid.row.bloqueada .juros {
     color: var(--accent-pink-block);
 }
 
@@ -497,7 +499,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-sm) 10px;
-    
+
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
@@ -518,10 +520,12 @@ body {
     color: var(--accent-yellow);
     font-size: var(--font-size-lg);
 }
+
 .sum .totalPar {
     color: var(--accent-purple);
     font-size: var(--font-size-lg);
 }
+
 /* -------------------- Footer -------------------- */
 .footer {
     display: flex;
@@ -587,14 +591,17 @@ body {
         padding: var(--spacing-xs);
         font-size: var(--font-size-xs);
     }
-    .grid input{
+
+    .grid input {
         text-align: center;
 
     }
-    .grid .remain{
+
+    .grid .remain {
         text-align: center;
     }
-    .grid .juros{
+
+    .grid .juros {
         text-align: center;
     }
 
@@ -604,7 +611,7 @@ body {
 
     .grid .input input {
         padding: 6px 8px;
-        font-size: 1rem;
+        font-size: var(--font-size-xs);
     }
 
     #pinScreen {
