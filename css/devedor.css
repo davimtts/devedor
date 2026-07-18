@@ -23,6 +23,7 @@
     /* Accent Colors */
     --accent-purple: #6c5ce7;
     --accent-lavender: #a29bfe;
+    --accent-yellow: #fdcb6e;
     --accent-cyan: #00cec9;
     --accent-pink: #fd79a8;
     --accent-pink-block: #fd79a77c;
@@ -489,10 +490,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--spacing-sm) 0;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
-    margin-bottom: var(--spacing-sm);
     clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
     font-weight: 600;
 }
@@ -502,11 +502,19 @@ body {
     font-size: var(--font-size-lg);
 }
 
-.sumT .totalPag {
+.sum .totalPag {
     color: var(--accent-cyan);
     font-size: var(--font-size-lg);
 }
 
+.sum .faltPag {
+    color: var(--accent-yellow);
+    font-size: var(--font-size-lg);
+}
+.sum .totalPar {
+    color: var(--accent-purple);
+    font-size: var(--font-size-lg);
+}
 /* -------------------- Footer -------------------- */
 .footer {
     display: flex;
