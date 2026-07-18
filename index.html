@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PainelDoDevedor</title>
     <link rel="stylesheet" href="css/devedor.css">
     <link rel="icon" href="img/icon.ico">
@@ -63,7 +63,7 @@
         </div>
         <div id="table"></div>
         <div class="top">
-            
+
             <div class="sum">
                 Total das parcelas:
                 <span class="totalPar" id="parcelasTotal">0,00</span>
@@ -83,7 +83,7 @@
                 <span class="totalPag" id="parcelasPagasTotal">0,00</span>
             </div>
 
-            
+
         </div>
         <div class="footer">
             <div>Criado por <a href="https://github.com/davimtts" target="_blank">davimtts</a></div>
@@ -94,5 +94,21 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 <script src="app/devedor.js"></script>
+
+<script>
+    document.addEventListener("gesturestart", e => e.preventDefault());
+    document.addEventListener("gesturechange", e => e.preventDefault());
+    document.addEventListener("gestureend", e => e.preventDefault());
+
+    let lastTouchEnd = 0;
+
+    document.addEventListener("touchend", function (e) {
+        const now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+            e.preventDefault();
+        }
+        lastTouchEnd = now;
+    }, { passive: false });
+</script>
 
 </html>
